@@ -154,6 +154,7 @@ All code must meet these quality standards:
 2. **flake8**: Zero warnings or errors
 3. **black**: All code must be formatted
 4. **Type Safety**: Full and strict Python typing
+5. **basedpyright**: Zero errors (warnings are informational)
 
 ### Commit Message Convention
 
@@ -211,10 +212,21 @@ pytest .
 
 ### Linting
 
-Run flake8 from root directory for linting:
+Run flake8 and basedpyright from root directory for linting:
 
 ```zsh
 flake8 *.py && flake8 listeners/
+```
+
+Run basedpyright for strict type checking:
+
+```zsh
+basedpyright listeners/
+```
+
+**Note**: If basedpyright is not installed, install it globally:
+```zsh
+npm install -g basedpyright
 ```
 
 ### Formatting

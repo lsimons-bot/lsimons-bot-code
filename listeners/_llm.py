@@ -6,9 +6,11 @@ supporting streaming responses, error handling, and full type annotations.
 
 import logging
 import os
-from typing import AsyncGenerator, Optional
+from collections.abc import AsyncGenerator
+from typing import cast
 
 from openai import AsyncOpenAI
+from openai.types.chat import ChatCompletionMessageParam
 
 logger = logging.getLogger(__name__)
 
@@ -20,10 +22,15 @@ class LiteLLMClient:
     for LiteLLM proxy interactions.
     """
 
+    api_key: str
+    base_url: str
+    timeout: float
+    _client: AsyncOpenAI
+
     def __init__(
         self,
-        api_key: Optional[str] = None,
-        base_url: Optional[str] = None,
+        api_key: str | None = None,
+        base_url: str | None = None,
         timeout: float = 60.0,
     ) -> None:
         """Initialize LiteLLM client.
@@ -37,11 +44,16 @@ class LiteLLMClient:
         Raises:
             ValueError: If api_key is not provided or available from environment.
         """
-        self.api_key = api_key or os.getenv("LITELLM_API_KEY")
-        if not self.api_key:
-            raise ValueError("LITELLM_API_KEY must be provided or set as environment variable")
+        resolved_api_key = api_key or os.getenv("LITELLM_API_KEY")
+        if not resolved_api_key:
+            raise ValueError(
+                "LITELLM_API_KEY must be provided or set as environment variable"
+            )
+        self.api_key = resolved_api_key
 
-        self.base_url = base_url or os.getenv("LITELLM_API_BASE", "https://litellm.sbp.ai/")
+        self.base_url = base_url or os.getenv(
+            "LITELLM_API_BASE", "https://litellm.sbp.ai/"
+        )
         self.timeout = timeout
 
         self._client = AsyncOpenAI(
@@ -53,10 +65,10 @@ class LiteLLMClient:
     async def stream_completion(
         self,
         model: str,
-        messages: list[dict[str, str]],
+        messages: list[ChatCompletionMessageParam],
         temperature: float = 0.7,
-        max_tokens: Optional[int] = None,
-        system_prompt: Optional[str] = None,
+        max_tokens: int | None = None,
+        system_prompt: str | None = None,
     ) -> AsyncGenerator[str, None]:
         """Stream a completion from LiteLLM proxy.
 
@@ -86,7 +98,7 @@ class LiteLLMClient:
         try:
             stream = await self._client.chat.completions.create(
                 model=model,
-                messages=request_messages,
+                messages=cast(list[ChatCompletionMessageParam], request_messages),
                 temperature=temperature,
                 max_tokens=max_tokens,
                 stream=True,
@@ -103,10 +115,10 @@ class LiteLLMClient:
     async def get_completion(
         self,
         model: str,
-        messages: list[dict[str, str]],
+        messages: list[ChatCompletionMessageParam],
         temperature: float = 0.7,
-        max_tokens: Optional[int] = None,
-        system_prompt: Optional[str] = None,
+        max_tokens: int | None = None,
+        system_prompt: str | None = None,
     ) -> str:
         """Get a non-streaming completion from LiteLLM proxy.
 
@@ -145,14 +157,19 @@ class LiteLLMClient:
         """Async context manager entry."""
         return self
 
-    async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
+    async def __aexit__(
+        self,
+        exc_type: object,
+        exc_val: object,
+        exc_tb: object,
+    ) -> None:
         """Async context manager exit."""
         await self.close()
 
 
 def create_llm_client(
-    api_key: Optional[str] = None,
-    base_url: Optional[str] = None,
+    api_key: str | None = None,
+    base_url: str | None = None,
     timeout: float = 60.0,
 ) -> LiteLLMClient:
     """Factory function to create a configured LiteLLM client.
