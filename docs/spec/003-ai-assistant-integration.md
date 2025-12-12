@@ -42,7 +42,7 @@ Use the OpenAI Agents SDK with LiteLLM model support to leverage your existing L
 - Bot uses async agents for non-blocking request handling
 
 **Model Configuration:**
-- Model format: `provider/model-name` (e.g., `openai/gpt-4`, `anthropic/claude-3-sonnet-20240229`)
+- Model format: `provider/model-name` (e.g., `azure/gpt-5-mini`, `aws/claude-4-5-sonnet`)
 - Proxy URL: `https://litellm.sbp.ai/`
 - Authentication: Proxy API key via `LITELLM_API_KEY` environment variable
 - Model specified in config with optional custom system prompt
@@ -88,7 +88,7 @@ def create_assistant_agent(
     api_key: str | None = None,
 ) -> Agent:
     """Create configured assistant agent with LiteLLM proxy."""
-    model = model or os.getenv("ASSISTANT_MODEL", "openai/gpt-4")
+    model = model or os.getenv("ASSISTANT_MODEL", "azure/gpt-5-mini")
     api_key = api_key or os.getenv("LITELLM_API_KEY")
     
     return Agent(
@@ -129,7 +129,7 @@ All errors logged at appropriate levels (warn for user-facing, error for system 
 **Environment Variables:**
 - `LITELLM_PROXY_URL`: Base URL of LiteLLM proxy (default: `https://litellm.sbp.ai/`)
 - `LITELLM_API_KEY`: API key for proxy authentication (required)
-- `ASSISTANT_MODEL`: Model to use (format: `provider/model-name`, e.g., `openai/gpt-4`)
+- `ASSISTANT_MODEL`: Model to use (format: `provider/model-name`, e.g., `azure/gpt-5-mini`)
 - `ASSISTANT_SYSTEM_PROMPT`: Custom system prompt for assistant personality (optional)
 
 **Requirements Update:**

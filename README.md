@@ -70,7 +70,7 @@ The assistant uses the **Slack Assistant API** and integrates with **LiteLLM pro
    LITELLM_API_KEY=your-litellm-api-key
    
    # LLM Model Configuration
-   ASSISTANT_MODEL=openai/gpt-4              # Format: provider/model-name
+   ASSISTANT_MODEL=azure/gpt-5-mini              # Format: provider/model-name
    
    # Optional: Custom System Prompt
    ASSISTANT_SYSTEM_PROMPT="You are a helpful assistant in Slack..."
@@ -91,12 +91,12 @@ The bot expects a LiteLLM proxy running at the URL specified in `LITELLM_PROXY_U
 ```
 Base URL: https://litellm.sbp.ai/
 Authentication: API key in `Authorization: Bearer {LITELLM_API_KEY}` header
-Models: Any model supported by LiteLLM (openai/gpt-4, anthropic/claude-3-sonnet, etc.)
+Models: Any model supported by LiteLLM (azure/gpt-5-mini, aws/claude-4-5-sonnet, etc.)
 ```
 
 **Example LiteLLM Proxy Setup (on your server):**
 ```bash
-litellm --model openai/gpt-4 \
+litellm --model azure/gpt-5-mini \
   --api_key sk-your-openai-key \
   --port 8000
 ```
@@ -111,7 +111,7 @@ Then point `LITELLM_PROXY_URL` to your proxy endpoint.
 |----------|----------|-------------|---------|
 | `LITELLM_PROXY_URL` | Yes | Base URL of LiteLLM proxy | `https://litellm.sbp.ai/` |
 | `LITELLM_API_KEY` | Yes | API key for proxy authentication | (your API key) |
-| `ASSISTANT_MODEL` | No | LLM model to use | `openai/gpt-4` |
+| `ASSISTANT_MODEL` | No | LLM model to use | `azure/gpt-5-mini` |
 | `ASSISTANT_SYSTEM_PROMPT` | No | Custom system prompt | `You are helpful...` |
 
 ### Slack App Manifest Configuration
@@ -163,7 +163,7 @@ Event subscriptions should include:
 **Issue**: Users see "Configuration error. Please check settings."
 
 **Solutions**:
-1. Verify `ASSISTANT_MODEL` is set and formatted correctly (e.g., `openai/gpt-4`)
+1. Verify `ASSISTANT_MODEL` is set and formatted correctly (e.g., `azure/gpt-5-mini`)
 2. Verify the model is available on your LiteLLM proxy
 3. Check proxy logs for model availability and routing issues
 4. Verify all required environment variables are set

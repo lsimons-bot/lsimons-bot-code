@@ -74,7 +74,9 @@ async def assistant_user_message_handler(
         await _send_error_to_user(client, body, "Thread unavailable", logger_)
     except LLMConfigurationError as e:
         logger_.error("LLM configuration error: %s", e)
-        await _send_error_to_user(client, body, "Configuration error. Please check settings.", logger_)
+        await _send_error_to_user(
+            client, body, "Configuration error. Please check settings.", logger_
+        )
     except LLMAPIError as e:
         logger_.error("LLM API error: %s", e)
         await _send_error_to_user(client, body, "AI assistant unavailable", logger_)
@@ -105,7 +107,9 @@ def _extract_request_data(
     user_message = str(user_message_raw).strip() if user_message_raw else ""
 
     if not thread_id or not channel_id:
-        raise InvalidRequestError("Missing required fields: assistant_thread_id or channel_id")
+        raise InvalidRequestError(
+            "Missing required fields: assistant_thread_id or channel_id"
+        )
 
     if not user_message:
         raise InvalidRequestError("User message cannot be empty")
@@ -148,7 +152,9 @@ async def _process_user_message(
     history = get_conversation_history(client, request.channel_id, request.thread_id)
 
     # Generate response
-    response_text = await _generate_llm_response(request, channel_info, history, logger_)
+    response_text = await _generate_llm_response(
+        request, channel_info, history, logger_
+    )
 
     if not response_text:
         logger_.warning("LLM returned empty response")
@@ -200,7 +206,7 @@ async def _generate_llm_response(
     system_prompt = build_system_prompt(context=channel_context)
 
     # Get model from environment
-    model = os.getenv("ASSISTANT_MODEL", "azure/gpt-3.5-turbo")
+    model = os.getenv("ASSISTANT_MODEL", "azure/gpt-5-mini")
 
     logger_.info(
         "Calling LLM with model %s, %d messages in history",

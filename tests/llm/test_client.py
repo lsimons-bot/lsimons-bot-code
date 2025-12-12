@@ -107,7 +107,7 @@ class TestStreamCompletion:
         ):
             chunks = []
             async for chunk in client.stream_completion(
-                model="openai/gpt-4",
+                model="azure/gpt-5-mini",
                 messages=[{"role": "user", "content": "Hi"}],
             ):
                 chunks.append(chunk)
@@ -134,7 +134,7 @@ class TestStreamCompletion:
             return_value=mock_response,
         ) as mock_create:
             async for _ in client.stream_completion(
-                model="openai/gpt-4",
+                model="azure/gpt-5-mini",
                 messages=[{"role": "user", "content": "Hi"}],
                 system_prompt="You are helpful",
             ):
@@ -168,7 +168,7 @@ class TestStreamCompletion:
             return_value=mock_response,
         ) as mock_create:
             async for _ in client.stream_completion(
-                model="openai/gpt-4",
+                model="azure/gpt-5-mini",
                 messages=[{"role": "user", "content": "Hi"}],
                 temperature=0.5,
                 max_tokens=100,
@@ -206,7 +206,7 @@ class TestStreamCompletion:
         ):
             chunks = []
             async for chunk in client.stream_completion(
-                model="openai/gpt-4",
+                model="azure/gpt-5-mini",
                 messages=[{"role": "user", "content": "Hi"}],
             ):
                 chunks.append(chunk)
@@ -226,7 +226,7 @@ class TestStreamCompletion:
         ):
             with pytest.raises(LLMTimeoutError):
                 async for _ in client.stream_completion(
-                    model="openai/gpt-4",
+                    model="azure/gpt-5-mini",
                     messages=[{"role": "user", "content": "Hi"}],
                 ):
                     pass
@@ -247,7 +247,7 @@ class TestStreamCompletion:
         ):
             with pytest.raises(LLMQuotaExceededError):
                 async for _ in client.stream_completion(
-                    model="openai/gpt-4",
+                    model="azure/gpt-5-mini",
                     messages=[{"role": "user", "content": "Hi"}],
                 ):
                     pass
@@ -268,7 +268,7 @@ class TestStreamCompletion:
         ):
             with pytest.raises(LLMAPIError):
                 async for _ in client.stream_completion(
-                    model="openai/gpt-4",
+                    model="azure/gpt-5-mini",
                     messages=[{"role": "user", "content": "Hi"}],
                 ):
                     pass
@@ -289,7 +289,7 @@ class TestStreamCompletion:
         ):
             with pytest.raises(LLMAPIError):
                 async for _ in client.stream_completion(
-                    model="openai/gpt-4",
+                    model="azure/gpt-5-mini",
                     messages=[{"role": "user", "content": "Hi"}],
                 ):
                     pass
@@ -300,7 +300,9 @@ class TestStreamCompletion:
         client = LiteLLMClient(api_key="test-key")
 
         async def raise_auth_error(*args, **kwargs):
-            raise AuthenticationError("Invalid API key", response=MagicMock(), body=None)
+            raise AuthenticationError(
+                "Invalid API key", response=MagicMock(), body=None
+            )
 
         with patch.object(
             client._client.chat.completions,
@@ -310,7 +312,7 @@ class TestStreamCompletion:
         ):
             with pytest.raises(LLMAPIError):
                 async for _ in client.stream_completion(
-                    model="openai/gpt-4",
+                    model="azure/gpt-5-mini",
                     messages=[{"role": "user", "content": "Hi"}],
                 ):
                     pass
@@ -342,7 +344,7 @@ class TestGetCompletion:
             return_value=mock_response,
         ):
             result = await client.get_completion(
-                model="openai/gpt-4",
+                model="azure/gpt-5-mini",
                 messages=[{"role": "user", "content": "Hi"}],
             )
 
@@ -368,7 +370,7 @@ class TestGetCompletion:
             return_value=mock_response,
         ) as mock_create:
             await client.get_completion(
-                model="openai/gpt-4",
+                model="azure/gpt-5-mini",
                 messages=[{"role": "user", "content": "Hi"}],
                 system_prompt="Be concise",
             )
@@ -394,7 +396,7 @@ class TestGetCompletion:
             return_value=mock_response,
         ):
             result = await client.get_completion(
-                model="openai/gpt-4",
+                model="azure/gpt-5-mini",
                 messages=[{"role": "user", "content": "Hi"}],
             )
 
