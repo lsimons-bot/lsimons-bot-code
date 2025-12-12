@@ -910,12 +910,14 @@ except SlackChannelError as e:
 
 ### Cleanup
 
-- [ ] Remove old `listeners/_llm.py`
-- [ ] Remove old `listeners/_prompt.py`
-- [ ] Remove old `listeners/_assistant_utils.py`
-- [ ] Consider deprecating old `listeners/` or making it a shim
-- [ ] Update all import statements
-- [ ] Update documentation
+- [ ] Remove the entire legacy top-level `listeners/` package and all compatibility shims (do not provide backwards-compat shims)
+- [ ] Delete `listeners/_llm.py`, `listeners/_prompt.py`, `listeners/_assistant_utils.py` (if present) and ensure no references remain
+- [ ] Migrate all imports to the new package paths under `lsimons_bot.*` (for example, `lsimons_bot.listeners`, `lsimons_bot.llm.*`, `lsimons_bot.slack.*`) and update `app.py` / `app_oauth.py` accordingly
+- [ ] Update and run automated codemods or search-and-replace scripts to ensure repository-wide import migration (add examples in the migration guide)
+- [ ] Update tests to import from new locations and move any legacy test files to their corresponding `tests/` locations under the new modules
+- [ ] Update documentation and specs (`docs/spec/002-slack-listener-patterns.md`, `AGENTS.md`, `README.md`, and docs/spec/003-ai-assistant-integration.md`) to reflect the removal of the legacy `listeners/` package and the canonical `lsimons_bot` package layout
+- [ ] Add a Migration Guide section (history/ and docs/spec/) with explicit examples and recommended commands for consumers (e.g., example sed/python snippets) so downstream users can update imports
+- [ ] Run full test suite, linters (flake8, basedpyright), and formatting (black) to verify the codebase is clean and free of any remaining legacy imports
 
 ## Appendix B: Pythonic Refactoring Examples
 
