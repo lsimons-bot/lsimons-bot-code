@@ -324,3 +324,106 @@ class TestLogFeedback:
         _log_feedback(request, test_logger)
 
         test_logger.info.assert_called_once()
+
+
+class TestSafeAckFunction:
+    """Tests for _safe_ack function."""
+
+    @pytest.mark.asyncio
+    async def test_safe_ack_with_async_callable(self) -> None:
+        """Test _safe_ack with async callable that returns awaitable."""
+        from lsimons_bot.listeners.actions.assistant_feedback import _safe_ack
+
+        ack = AsyncMock()
+        await _safe_ack(ack)
+
+        ack.assert_called_once()
+
+    @pytest.mark.asyncio
+    async def test_safe_ack_with_sync_callable(self) -> None:
+        """Test _safe_ack with sync callable that returns non-awaitable."""
+        from lsimons_bot.listeners.actions.assistant_feedback import _safe_ack
+
+        def ack_sync() -> None:
+            pass
+
+        await _safe_ack(ack_sync)
+        # Should not raise, just return
+
+    @pytest.mark.asyncio
+    async def test_safe_ack_with_awaitable_result(self) -> None:
+        """Test _safe_ack when ack returns an awaitable."""
+        from lsimons_bot.listeners.actions.assistant_feedback import _safe_ack
+
+        async def ack_async_returns_coroutine() -> None:
+            pass
+
+        # Call the async function to get a coroutine (awaitable)
+        coro = ack_async_returns_coroutine()
+
+        def ack_that_returns_awaitable() -> object:
+            return coro
+
+        await _safe_ack(ack_that_returns_awaitable)
+        # Should await the result successfully
+
+    @pytest.mark.asyncio
+    async def test_safe_ack_with_type_error(self) -> None:
+        """Test _safe_ack when ack raises TypeError."""
+        from lsimons_bot.listeners.actions.assistant_feedback import _safe_ack
+
+        def ack_that_raises() -> None:
+            raise TypeError("ack requires arguments")
+
+        await _safe_ack(ack_that_raises)
+        # Should not raise, just return
+
+
+class TestSendAcknowledgmentFunction:
+    """Tests for _send_acknowledgment function."""
+
+    @pytest.mark.asyncio
+    async def test_send_acknowledgment_missing_channel_and_response_ts(self) -> None:
+        """Test _send_acknowledgment when channel_id and response_ts are missing."""
+        from lsimons_bot.listeners.actions.assistant_feedback import (
+            _send_acknowledgment,
+        )
+
+        client = MagicMock()
+        test_logger = MagicMock(spec=logging.Logger)
+
+        request = FeedbackRequest(
+            feedback_type="positive",
+            user_id="U123",
+            channel_id=None,
+            response_ts=None,
+            team_id="T123",
+        )
+
+        await _send_acknowledgment(request, client, test_logger)
+
+        test_logger.warning.assert_called()
+        client.chat_postEphemeral.assert_not_called()
+
+    @pytest.mark.asyncio
+    async def test_send_acknowledgment_missing_response_ts(self) -> None:
+        """Test _send_acknowledgment when response_ts is missing."""
+        from lsimons_bot.listeners.actions.assistant_feedback import (
+            _send_acknowledgment,
+        )
+
+        client = MagicMock()
+        test_logger = MagicMock(spec=logging.Logger)
+
+        request = FeedbackRequest(
+            feedback_type="positive",
+            user_id="U123",
+            channel_id="C123",
+            response_ts=None,
+            team_id="T123",
+        )
+
+        await _send_acknowledgment(request, client, test_logger)
+
+        test_logger.warning.assert_called()
+        client.chat_postEphemeral.assert_not_called()

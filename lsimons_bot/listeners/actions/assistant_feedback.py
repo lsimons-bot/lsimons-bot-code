@@ -34,13 +34,6 @@ class FeedbackRequest:
     team_id: Optional[str]
 
 
-async def _maybe_await(func_result: object) -> None:
-    """Await result if it is awaitable, otherwise do nothing."""
-    if inspect.isawaitable(func_result):
-        # Await the awaitable (this covers AsyncMock and real coroutines)
-        await func_result  # type: ignore[reportGeneralTypeIssues]
-
-
 async def _safe_ack(ack: Callable[..., object]) -> None:
     """Call ack and await it if it returns an awaitable.
 
@@ -54,7 +47,9 @@ async def _safe_ack(ack: Callable[..., object]) -> None:
         # the caller should adapt accordingly.
         return
 
-    await _maybe_await(result)
+    if inspect.isawaitable(result):
+        # Await the awaitable (this covers AsyncMock and real coroutines)
+        await result  # type: ignore[reportGeneralTypeIssues]
 
 
 def _extract_feedback_data(
@@ -151,7 +146,9 @@ async def _send_acknowledgment(
         logger_.warning("Cannot send acknowledgment: missing channel_id or response_ts")
         return
 
-    acknowledgment_text = "Thank you for your feedback! We use this to improve the assistant."
+    acknowledgment_text = (
+        "Thank you for your feedback! We use this to improve the assistant."
+    )
 
     try:
         client.chat_postEphemeral(
