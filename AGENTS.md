@@ -207,7 +207,7 @@ slack run
 Run pytest from root directory for unit testing:
 
 ```zsh
-pytest .
+uv run pytest .
 ```
 
 ### Linting
@@ -215,7 +215,7 @@ pytest .
 Run flake8 and basedpyright from root directory for linting:
 
 ```zsh
-flake8 *.py && flake8 listeners/
+uv run flake8 app.py app_oauth.py lsimons_bot tests
 ```
 
 Run basedpyright for strict type checking:
@@ -234,7 +234,7 @@ npm install -g basedpyright
 Run black from root directory for code formatting:
 
 ```zsh
-black .
+uv run black .
 ```
 
 ## Environment and Dependencies
