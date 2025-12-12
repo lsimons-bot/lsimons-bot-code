@@ -36,8 +36,18 @@ class TestAssistantFeedbackHandler:
         await assistant_feedback_handler(ack, body, client, test_logger)
 
         ack.assert_called_once()
-        client.chat_postEphemeral.assert_called_once()
-        test_logger.info.assert_called()
+
+        # Assert the ephemeral message was sent with correct parameters
+        call_args = client.chat_postEphemeral.call_args
+        assert call_args.kwargs["channel"] == "C123"
+        assert call_args.kwargs["user"] == "U123"
+        assert call_args.kwargs["thread_ts"] == "1234567890.123456"
+        assert "Thank you" in call_args.kwargs["text"]
+
+        # Assert feedback was logged with correct event name
+        # Check that "feedback_event" appears in one of the logger.info calls
+        info_calls = [call[0][0] for call in test_logger.info.call_args_list]
+        assert "feedback_event" in info_calls
 
     @pytest.mark.asyncio
     async def test_handler_thumbs_down(self) -> None:
@@ -57,8 +67,18 @@ class TestAssistantFeedbackHandler:
         await assistant_feedback_handler(ack, body, client, test_logger)
 
         ack.assert_called_once()
-        client.chat_postEphemeral.assert_called_once()
-        test_logger.info.assert_called()
+
+        # Assert the ephemeral message was sent with correct parameters
+        call_args = client.chat_postEphemeral.call_args
+        assert call_args.kwargs["channel"] == "C456"
+        assert call_args.kwargs["user"] == "U456"
+        assert call_args.kwargs["thread_ts"] == "1234567891.123456"
+        assert "Thank you" in call_args.kwargs["text"]
+
+        # Assert feedback was logged with correct event name
+        # Check that "feedback_event" appears in one of the logger.info calls
+        info_calls = [call[0][0] for call in test_logger.info.call_args_list]
+        assert "feedback_event" in info_calls
 
     @pytest.mark.asyncio
     async def test_handler_missing_action_value(self) -> None:
@@ -78,8 +98,11 @@ class TestAssistantFeedbackHandler:
         await assistant_feedback_handler(ack, body, client, test_logger)
 
         ack.assert_called_once()
-        test_logger.warning.assert_called()
         client.chat_postEphemeral.assert_not_called()
+
+        # Assert warning was logged with details about the invalid request
+        log_call_args = test_logger.warning.call_args
+        assert "Invalid" in log_call_args[0][0] or "invalid" in log_call_args[0][0]
 
     @pytest.mark.asyncio
     async def test_handler_missing_user_id(self) -> None:
@@ -99,8 +122,11 @@ class TestAssistantFeedbackHandler:
         await assistant_feedback_handler(ack, body, client, test_logger)
 
         ack.assert_called_once()
-        test_logger.warning.assert_called()
         client.chat_postEphemeral.assert_not_called()
+
+        # Assert warning was logged with details about the invalid request
+        log_call_args = test_logger.warning.call_args
+        assert "Invalid" in log_call_args[0][0] or "invalid" in log_call_args[0][0]
 
     @pytest.mark.asyncio
     async def test_handler_missing_actions_array(self) -> None:
@@ -119,7 +145,10 @@ class TestAssistantFeedbackHandler:
         await assistant_feedback_handler(ack, body, client, test_logger)
 
         ack.assert_called_once()
-        test_logger.warning.assert_called()
+
+        # Assert warning was logged with details about the invalid request
+        log_call_args = test_logger.warning.call_args
+        assert "Invalid" in log_call_args[0][0] or "invalid" in log_call_args[0][0]
 
     @pytest.mark.asyncio
     async def test_handler_ephemeral_message_failure(self) -> None:
@@ -144,7 +173,11 @@ class TestAssistantFeedbackHandler:
         await assistant_feedback_handler(ack, body, client, test_logger)
 
         ack.assert_called_once()
-        test_logger.warning.assert_called()
+
+        # Assert warning was logged about the Slack API error
+        log_call_args = test_logger.warning.call_args
+        logged_message = log_call_args[0][0]
+        assert "channel_not_found" in logged_message or "Slack" in logged_message or "Failed" in logged_message or "failed" in logged_message
 
     @pytest.mark.asyncio
     async def test_handler_unexpected_error(self) -> None:
@@ -169,7 +202,11 @@ class TestAssistantFeedbackHandler:
         await assistant_feedback_handler(ack, body, client, test_logger)
 
         ack.assert_called_once()
-        test_logger.warning.assert_called()
+
+        # Assert warning was logged about the Slack API error
+        log_call_args = test_logger.warning.call_args
+        logged_message = log_call_args[0][0]
+        assert "api_error" in logged_message or "Slack" in logged_message or "Failed" in logged_message or "failed" in logged_message
 
     @pytest.mark.asyncio
     async def test_handler_without_optional_fields(self) -> None:
@@ -188,7 +225,12 @@ class TestAssistantFeedbackHandler:
         await assistant_feedback_handler(ack, body, client, test_logger)
 
         ack.assert_called_once()
-        client.chat_postEphemeral.assert_called_once()
+
+        # Assert the ephemeral message was sent with correct required parameters
+        call_args = client.chat_postEphemeral.call_args
+        assert call_args.kwargs["channel"] == "C123"
+        assert call_args.kwargs["user"] == "U123"
+        assert call_args.kwargs["thread_ts"] == "1234567890.123456"
 
 
 class TestExtractFeedbackData:
@@ -402,8 +444,12 @@ class TestSendAcknowledgmentFunction:
 
         await _send_acknowledgment(request, client, test_logger)
 
-        test_logger.warning.assert_called()
         client.chat_postEphemeral.assert_not_called()
+
+        # Assert warning was logged about missing required fields
+        log_call_args = test_logger.warning.call_args
+        logged_message = log_call_args[0][0]
+        assert "channel" in logged_message.lower() or "missing" in logged_message.lower()
 
     @pytest.mark.asyncio
     async def test_send_acknowledgment_missing_response_ts(self) -> None:
@@ -425,5 +471,9 @@ class TestSendAcknowledgmentFunction:
 
         await _send_acknowledgment(request, client, test_logger)
 
-        test_logger.warning.assert_called()
         client.chat_postEphemeral.assert_not_called()
+
+        # Assert warning was logged about missing required fields
+        log_call_args = test_logger.warning.call_args
+        logged_message = log_call_args[0][0]
+        assert "response_ts" in logged_message or "thread" in logged_message.lower() or "missing" in logged_message.lower()
