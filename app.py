@@ -9,7 +9,10 @@ from listeners import register_listeners
 logging.basicConfig(level=logging.DEBUG)
 
 # Initialization
-app = App(token=os.environ.get("SLACK_BOT_TOKEN"))
+app = App(
+    token=os.environ.get("SLACK_BOT_TOKEN"),
+    ignoring_self_assistant_message_events_enabled=False,
+)
 
 # Register Listeners
 register_listeners(app)
