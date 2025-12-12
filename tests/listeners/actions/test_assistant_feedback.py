@@ -327,33 +327,33 @@ class TestLogFeedback:
 
 
 class TestSafeAckFunction:
-    """Tests for _safe_ack function."""
+    """Tests for safe_ack function."""
 
     @pytest.mark.asyncio
     async def test_safe_ack_with_async_callable(self) -> None:
-        """Test _safe_ack with async callable that returns awaitable."""
-        from lsimons_bot.listeners.actions.assistant_feedback import _safe_ack
+        """Test safe_ack with async callable that returns awaitable."""
+        from lsimons_bot.listeners.utils import safe_ack
 
         ack = AsyncMock()
-        await _safe_ack(ack)
+        await safe_ack(ack)
 
         ack.assert_called_once()
 
     @pytest.mark.asyncio
     async def test_safe_ack_with_sync_callable(self) -> None:
-        """Test _safe_ack with sync callable that returns non-awaitable."""
-        from lsimons_bot.listeners.actions.assistant_feedback import _safe_ack
+        """Test safe_ack with sync callable that returns non-awaitable."""
+        from lsimons_bot.listeners.utils import safe_ack
 
         def ack_sync() -> None:
             pass
 
-        await _safe_ack(ack_sync)
+        await safe_ack(ack_sync)
         # Should not raise, just return
 
     @pytest.mark.asyncio
     async def test_safe_ack_with_awaitable_result(self) -> None:
-        """Test _safe_ack when ack returns an awaitable."""
-        from lsimons_bot.listeners.actions.assistant_feedback import _safe_ack
+        """Test safe_ack when ack returns an awaitable."""
+        from lsimons_bot.listeners.utils import safe_ack
 
         async def ack_async_returns_coroutine() -> None:
             pass
@@ -364,18 +364,18 @@ class TestSafeAckFunction:
         def ack_that_returns_awaitable() -> object:
             return coro
 
-        await _safe_ack(ack_that_returns_awaitable)
+        await safe_ack(ack_that_returns_awaitable)
         # Should await the result successfully
 
     @pytest.mark.asyncio
     async def test_safe_ack_with_type_error(self) -> None:
-        """Test _safe_ack when ack raises TypeError."""
-        from lsimons_bot.listeners.actions.assistant_feedback import _safe_ack
+        """Test safe_ack when ack raises TypeError."""
+        from lsimons_bot.listeners.utils import safe_ack
 
         def ack_that_raises() -> None:
             raise TypeError("ack requires arguments")
 
-        await _safe_ack(ack_that_raises)
+        await safe_ack(ack_that_raises)
         # Should not raise, just return
 
 

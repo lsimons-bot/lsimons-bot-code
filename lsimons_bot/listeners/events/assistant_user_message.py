@@ -4,7 +4,6 @@ Triggered when a user sends a message in an AI assistant thread.
 Retrieves conversation history, calls LLM via LiteLLM proxy, and streams response.
 """
 
-import inspect
 import logging
 import os
 from dataclasses import dataclass
@@ -13,6 +12,7 @@ from typing import Any, Callable, Sequence, cast
 from openai.types.chat import ChatCompletionMessageParam
 from slack_sdk import WebClient
 
+from lsimons_bot.listeners.utils import safe_ack
 from lsimons_bot.llm import (
     LLMAPIError,
     LLMConfigurationError,
@@ -31,21 +31,6 @@ from lsimons_bot.slack import (
 )
 
 logger = logging.getLogger(__name__)
-
-
-async def _safe_ack(ack: Callable[..., object]) -> None:
-    """Call ack and await it if it returns an awaitable.
-
-    Keeps the handler compatible with both sync and async ack callables.
-    """
-    try:
-        result = ack()
-    except TypeError:
-        # If ack expects args and tests use a different signature, ignore here.
-        return
-
-    if inspect.isawaitable(result):
-        await result
 
 
 @dataclass
@@ -74,7 +59,7 @@ async def assistant_user_message_handler(
         logger_: Logger instance for this handler
     """
     # Call ack and await if necessary to support both sync and async ack implementations
-    await _safe_ack(ack)
+    await safe_ack(ack)
 
     try:
         request = _extract_request_data(body, logger_)

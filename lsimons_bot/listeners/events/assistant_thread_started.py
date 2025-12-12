@@ -4,13 +4,13 @@ Triggered when a user opens a new AI assistant thread in a channel.
 Sends welcome greeting and suggested prompts to guide user interaction.
 """
 
-import inspect
 import logging
 from dataclasses import dataclass
 from typing import Any, Callable
 
 from slack_sdk import WebClient
 
+from lsimons_bot.listeners.utils import safe_ack
 from lsimons_bot.llm import get_suggested_prompts
 from lsimons_bot.slack import (
     InvalidRequestError,
@@ -49,13 +49,7 @@ async def assistant_thread_started_handler(
         logger_: Logger instance for this handler
     """
     # ack may be sync or async; call and await if necessary
-    try:
-        result = ack()
-        if inspect.isawaitable(result):
-            await result
-    except TypeError:
-        # ack may expect different signature in some contexts; ignore
-        pass
+    await safe_ack(ack)
 
     try:
         request = _extract_thread_data(body, logger_)
@@ -87,7 +81,9 @@ def _extract_thread_data(
     user_id = body.get("user_id", "").strip()
 
     if not thread_id or not channel_id:
-        raise InvalidRequestError("Missing required fields: assistant_thread_id or channel_id")
+        raise InvalidRequestError(
+            "Missing required fields: assistant_thread_id or channel_id"
+        )
 
     logger_.info(
         "Assistant thread started - thread: %s, channel: %s, user: %s",

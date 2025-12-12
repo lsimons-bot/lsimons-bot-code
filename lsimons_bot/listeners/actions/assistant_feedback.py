@@ -10,7 +10,6 @@ This version:
 
 from __future__ import annotations
 
-import inspect
 import logging
 from dataclasses import dataclass
 from typing import Callable, Mapping, Optional
@@ -18,6 +17,7 @@ from typing import Callable, Mapping, Optional
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 
+from lsimons_bot.listeners.utils import safe_ack
 from lsimons_bot.slack import InvalidRequestError
 
 logger = logging.getLogger(__name__)
@@ -32,24 +32,6 @@ class FeedbackRequest:
     channel_id: Optional[str]
     response_ts: Optional[str]
     team_id: Optional[str]
-
-
-async def _safe_ack(ack: Callable[..., object]) -> None:
-    """Call ack and await it if it returns an awaitable.
-
-    This keeps the handler compatible with both sync and async ack callables.
-    """
-    try:
-        result = ack()
-    except TypeError:
-        # If ack requires arguments, call without them and ignore TypeError
-        # Tests typically use ack without args; if a different signature is used
-        # the caller should adapt accordingly.
-        return
-
-    if inspect.isawaitable(result):
-        # Await the awaitable (this covers AsyncMock and real coroutines)
-        await result  # type: ignore[reportGeneralTypeIssues]
 
 
 def _extract_feedback_data(
@@ -183,7 +165,7 @@ async def assistant_feedback_handler(
         logger_: Logger instance for this handler
     """
     # Call ack and await if necessary (keeps tests using AsyncMock happy)
-    await _safe_ack(ack)
+    await safe_ack(ack)
 
     try:
         request = _extract_feedback_data(body, logger_)
