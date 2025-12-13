@@ -1,3 +1,4 @@
+# pyright: reportUnknownMemberType=none, reportUnknownVariableType=none
 from slack_bolt.async_app import AsyncApp, AsyncAssistant
 
 from .assistant_message import assistant_message

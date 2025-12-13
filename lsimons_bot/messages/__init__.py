@@ -1,3 +1,4 @@
+# pyright: reportUnknownMemberType=none, reportUnknownVariableType=none
 from slack_bolt.async_app import AsyncApp
 
 from .app_mention import app_mention

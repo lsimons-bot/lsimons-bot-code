@@ -1,3 +1,4 @@
+# pyright: reportExplicitAny=none, reportUnknownMemberType=none
 import logging
 import random
 from asyncio import sleep
