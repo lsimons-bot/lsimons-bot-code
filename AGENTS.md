@@ -16,37 +16,49 @@ This document provides instructions for AI code-generation agents.
 ```
 lsimons-bot/
 ├── lsimons_bot/           # Main application source code
-│   ├── assistant/         # AI assistant handlers
-│   │   ├── __init__.py    # register(app) function
-│   │   ├── assistant_message.py
-│   │   └── assistant_thread_started.py
-│   ├── home/              # Home tab handlers
+│   ├── app/               # Application core
 │   │   ├── __init__.py
-│   │   └── app_home_opened.py
-│   ├── messages/          # Message event handlers
-│   │   ├── __init__.py
-│   │   ├── app_mention.py
-│   │   └── message.py
-│   ├── app.py             # Main application entry point
-│   └── config.py          # Environment configuration
+│   │   ├── main.py        # Application entry point and initialization
+│   │   └── config.py      # Environment configuration
+│   └── slack/             # Slack integration layer
+│       ├── __init__.py
+│       ├── assistant/     # AI assistant handlers
+│       │   ├── __init__.py    # register(app) function
+│       │   ├── assistant_message.py
+│       │   └── assistant_thread_started.py
+│       ├── home/          # Home tab handlers
+│       │   ├── __init__.py
+│       │   └── app_home_opened.py
+│       └── messages/      # Message event handlers
+│           ├── __init__.py
+│           ├── app_mention.py
+│           └── message.py
 ├── tests/                 # Unit tests mirroring source structure
-│   ├── assistant/         # Tests for assistant module
-│   ├── home/              # Tests for home module
-│   ├── messages/          # Tests for messages module
-│   ├── test_app.py        # Tests for app.py
-│   └── test_config.py     # Tests for config.py
+│   ├── app/               # Application core tests
+│   │   ├── test_main.py   # Tests for main.py
+│   │   └── test_config.py # Tests for config.py
+│   └── slack/             # Slack integration tests
+│       ├── assistant/     # Tests for assistant module
+│       ├── home/          # Tests for home module
+│       └── messages/      # Tests for messages module
 ├── docs/
 │   └── spec/              # Persistent specs (000, 001, 002...)
-├── app.py                 # Entry point script (imports from lsimons_bot)
+├── app.py                 # Entry point script (imports from lsimons_bot.app.main)
 ├── manifest.json          # Slack app manifest
 ├── requirements.txt       # Python dependencies
 └── pyrightconfig.json     # Type checker configuration
 ```
 
 **Key patterns:**
-- Each module has `__init__.py` with a `register(app)` function
+- Two main submodules: `app/` (core) and `slack/` (integration)
+- Slack modules have `__init__.py` with a `register(app)` function
 - Each handler is in its own file (one handler per file)
 - Tests mirror source structure exactly (module → test submodule, file → test file)
+
+**Module Dependencies:**
+- `lsimons_bot.app` depends on `lsimons_bot.slack` (imports and registers handlers)
+- `lsimons_bot.slack` has NO dependency on `lsimons_bot.app`
+- This keeps the Slack integration layer clean and reusable
 
 ## Issue Tracking with bd (beads)
 
@@ -181,19 +193,24 @@ This codebase values **compact, pragmatic code**. Follow these patterns:
 #### Code Organization
 
 - **Small files**: Keep files under 300 lines (most are under 25 lines)
-- **Module structure**: Feature areas have submodules with:
-  - `__init__.py` with a `register(app)` function
-  - Handler files with specific event handlers (one per file)
-  - Clean separation of concerns
+- **Module structure**: Two main submodules:
+  - `lsimons_bot.app/` - Application core (main, config)
+  - `lsimons_bot.slack/` - Slack integration (assistant, home, messages)
+- **Slack modules**: Each has `__init__.py` with a `register(app)` function
+- **Handler files**: One handler per file for clarity
+- **Clean dependencies**:
+  - `app` depends on `slack` (registers handlers)
+  - `slack` has NO dependency on `app` (reusable integration layer)
 - **No over-engineering**: Write simple, direct code for current requirements
 - **Type hints**: Use full type annotations everywhere
 
 #### Test Organization
 
 - **Mirror source structure**: All modules with submodules get test submodules
-  - `lsimons_bot/assistant/` → `tests/assistant/`
-  - `lsimons_bot/home/` → `tests/home/`
-  - Simple single-file modules → single test file (e.g., `lsimons_bot/config.py` → `tests/test_config.py`)
+  - `lsimons_bot/app/` → `tests/app/`
+  - `lsimons_bot/slack/assistant/` → `tests/slack/assistant/`
+  - `lsimons_bot/slack/home/` → `tests/slack/home/`
+  - `lsimons_bot/slack/messages/` → `tests/slack/messages/`
   - Each source file gets its own test file (e.g., `assistant_message.py` → `test_assistant_message.py`)
 - **Pragmatic testing**:
   - Aim for 100% coverage with minimal tests
@@ -275,7 +292,7 @@ uv run black .
 Run flake8 and basedpyright from root directory for linting:
 
 ```zsh
-uv run flake8 app.py app_oauth.py lsimons_bot tests
+uv run flake8 app.py lsimons_bot tests
 ```
 
 Run basedpyright for strict type checking:

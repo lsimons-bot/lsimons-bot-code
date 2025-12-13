@@ -72,6 +72,7 @@ uv run pytest . --cov=lsimons_bot
 See [docs] for additional documentation:
 - [docs/spec/000-shared-patterns.md] - Common code patterns
 - [docs/spec/001-spec-based-development.md] - How to write and implement specs
+- [docs/spec/002-slack-client.md] - Slack integration architecture
 
 Reference docs for slack api:
 - [async app docs](https://docs.slack.dev/tools/bolt-python/reference/async_app.html)

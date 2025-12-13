@@ -11,9 +11,10 @@
 **Design Approach:**
 - Use `slack_bolt` AsyncApp for async event handling
 - Use `AsyncAssistant` for AI Assistant API features
-- Organize handlers by event type in separate modules (assistant, messages, home)
+- Organize handlers in `lsimons_bot.slack` submodule (assistant, messages, home)
 - Each module exposes a `register(app)` function to attach handlers
 - One handler per file for clarity
+- Keep slack integration independent of application core
 
 **Implementation Notes:**
 
@@ -110,38 +111,48 @@ body = {
 
 ## Current Modules
 
-### assistant/
+All Slack integration modules live under `lsimons_bot.slack/`:
+
+### lsimons_bot.slack.assistant/
 Handles AI Assistant API events:
 - `assistant_message`: User messages in assistant threads
 - `assistant_thread_started`: New thread initialization
 
-### messages/
+### lsimons_bot.slack.messages/
 Handles general message events:
 - `message`: All message events (filters out bots)
 - `app_mention`: @mentions of the bot
 
-### home/
+### lsimons_bot.slack.home/
 Handles app home tab:
 - `app_home_opened`: User opens app home tab
 
 ## Adding New Handlers
 
-1. Create handler file in appropriate module directory
+1. Create handler file in `lsimons_bot/slack/{module}/` directory
 2. Define async handler function with required parameters
 3. Add registration in module's `__init__.py`
-4. Create corresponding test file in tests/
+4. Create corresponding test file in `tests/slack/{module}/`
 
 Example:
 ```python
-# lsimons_bot/messages/new_handler.py
+# lsimons_bot/slack/messages/new_handler.py
 async def new_handler(event: dict[str, Any], say: AsyncSay) -> None:
     await say("Response")
 
-# lsimons_bot/messages/__init__.py
+# lsimons_bot/slack/messages/__init__.py
 from .new_handler import new_handler
 
 def register(app: AsyncApp) -> None:
     app.event("event_name")(new_handler)
+
+# tests/slack/messages/test_new_handler.py
+from lsimons_bot.slack.messages.new_handler import new_handler
+
+class TestNewHandler:
+    @pytest.mark.asyncio
+    async def test_new_handler_happy_path(self) -> None:
+        await new_handler({"type": "event"}, AsyncMock())
 ```
 
 ## References
