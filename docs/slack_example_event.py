@@ -60,9 +60,7 @@ async def slack_event_handler(
 
 # sample data from an invocation of assistant_message():
 event = {
-    "assistant_thread": {
-        "action_token": "10113454590597.10138525474272.6d5f43aa145b052ce0f7650320d9767a"
-    },
+    "assistant_thread": {"action_token": "10113454590597.10138525474272.6d5f43aa145b052ce0f7650320d9767a"},
     "blocks": [
         {
             "block_id": "a8bcU",

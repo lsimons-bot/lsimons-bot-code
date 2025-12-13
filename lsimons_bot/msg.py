@@ -5,9 +5,7 @@ message_1 = {
     "thread_ts": "1765654724.967329",
     "parent_user_id": "U0A3BQUJQ5S",
     "channel": "D0A387NCE2W",
-    "assistant_thread": {
-        "action_token": "10116779555154.10138525474272.9b39d433f13510945bee770e07841d02"
-    },
+    "assistant_thread": {"action_token": "10116779555154.10138525474272.9b39d433f13510945bee770e07841d02"},
     "channel_type": "im",
 }
 
@@ -33,9 +31,7 @@ message_2 = {
     "thread_ts": "1765654724.967329",
     "parent_user_id": "U0A3BQUJQ5S",
     "channel": "D0A387NCE2W",
-    "assistant_thread": {
-        "action_token": "10145092388640.10138525474272.bea797dbe6b6467b84019a93bd54a512"
-    },
+    "assistant_thread": {"action_token": "10145092388640.10138525474272.bea797dbe6b6467b84019a93bd54a512"},
     "channel_type": "im",
 }
 

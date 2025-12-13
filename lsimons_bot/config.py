@@ -15,9 +15,7 @@ def validate_env_vars(required_vars: list[str]) -> dict[str, str]:
             env_values[var] = value
 
     if missing_vars:
-        raise Exception(
-            f"Missing required environment variables: {', '.join(missing_vars)}"
-        )
+        raise Exception(f"Missing required environment variables: {', '.join(missing_vars)}")
 
     return env_values
 

@@ -71,9 +71,7 @@ async def assistant_message(
     logger.debug("<< assistant_message()")
 
 
-async def read_thread(
-    client: AsyncWebClient, channel_id: str, thread_ts: str
-) -> List[Dict[str, str]]:
+async def read_thread(client: AsyncWebClient, channel_id: str, thread_ts: str) -> List[Dict[str, str]]:
     messages: List[Dict[str, str]] = []
     replies: AsyncSlackResponse = await client.conversations_replies(
         channel=channel_id,
