@@ -73,6 +73,11 @@ See [docs] for additional documentation:
 - [docs/spec/000-shared-patterns.md] - Common code patterns
 - [docs/spec/001-spec-based-development.md] - How to write and implement specs
 
+Reference docs for slack api:
+- [async app docs](https://docs.slack.dev/tools/bolt-python/reference/async_app.html)
+- [async web client docs](https://docs.slack.dev/tools/python-slack-sdk/reference/web/async_client.html)
+- [slack api methods](https://api.slack.com/methods)
+
 ## License
 
 See [LICENSE.md] for license information. The original Slack template is MIT licensed, while new code is private.
