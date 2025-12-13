@@ -150,11 +150,11 @@ For example: `bd create --help` shows `--parent`, `--deps`, `--assignee`, etc.
 
 All code must meet these quality standards:
 
-1. **Code Coverage**: Minimum 80% test coverage (branches, functions, lines, statements)
+1. **black**: All code must be formatted
 2. **flake8**: Zero warnings or errors
-3. **black**: All code must be formatted
+3. **basedpyright**: Zero errors (warnings are informational)
 4. **Type Safety**: Full and strict Python typing
-5. **basedpyright**: Zero errors (warnings are informational)
+5. **Code Coverage**: Minimum 80% test coverage (branches, functions, lines, statements)
 
 ### Commit Message Convention
 
@@ -189,7 +189,7 @@ Always follow this development process:
 4. Ask for human review of the spec
 5. Only if the human confirms, implement the spec
 6. Create tests for the new functionality
-7. Run tests, linting, and formatting
+7. Run formatting, linting, and tests
 8. Commit changes with a proper commit message
 9. Do *not* try to handle git branch, push, or pull requests, ask the human
 
@@ -202,12 +202,12 @@ uv pip install -r requirements.txt
 slack run
 ```
 
-### Testing
+### Formatting
 
-Run pytest from root directory for unit testing:
+Run black from root directory for code formatting:
 
 ```zsh
-uv run pytest .
+uv run black .
 ```
 
 ### Linting
@@ -229,12 +229,12 @@ basedpyright lsimons_bot
 npm install -g basedpyright
 ```
 
-### Formatting
+### Testing
 
-Run black from root directory for code formatting:
+Run pytest from root directory for unit testing:
 
 ```zsh
-uv run black .
+uv run pytest .
 ```
 
 ## Environment and Dependencies
