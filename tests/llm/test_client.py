@@ -421,7 +421,13 @@ class TestGetCompletion:
 
 
 class TestContextManager:
-    """Tests for async context manager functionality."""
+    """Tests for async context manager functionality.
+
+    Note: We have basic coverage of the async context manager (__aenter__/__aexit__)
+    but decided not to add exhaustive tests for edge cases as the implementation is
+    straightforward and delegates to the underlying client's close method. The existing
+    tests verify the core behavior adequately.
+    """
 
     @pytest.mark.asyncio
     async def test_async_context_manager_closes_client(self):
