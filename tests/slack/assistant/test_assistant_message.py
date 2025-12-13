@@ -2,7 +2,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from lsimons_bot.assistant.assistant_message import assistant_message, read_thread
+from lsimons_bot.slack.assistant.assistant_message import assistant_message, read_thread
 
 
 class TestReadThread:
@@ -31,7 +31,7 @@ class TestAssistantMessage:
         mock_context.channel_id = channel_id
         mock_context.thread_ts = thread_ts
 
-        with patch("lsimons_bot.assistant.assistant_message.sleep", new=AsyncMock()):
+        with patch("lsimons_bot.slack.assistant.assistant_message.sleep", new=AsyncMock()):
             await assistant_message(
                 mock_context,
                 {"text": "hello"},

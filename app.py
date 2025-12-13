@@ -8,6 +8,6 @@ logging.getLogger("lsimons_bot").setLevel(logging.DEBUG)
 
 
 if __name__ == "__main__":
-    from lsimons_bot.app import main
+    from lsimons_bot.app.main import main
 
     asyncio.run(main())

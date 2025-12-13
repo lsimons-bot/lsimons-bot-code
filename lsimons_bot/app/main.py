@@ -1,12 +1,11 @@
 from slack_bolt.adapter.socket_mode.async_handler import AsyncSocketModeHandler
 from slack_bolt.async_app import AsyncApp
 
-from lsimons_bot.config import get_env_vars
+from lsimons_bot.app.config import get_env_vars
+from lsimons_bot.slack import assistant, home, messages
 
-from . import assistant, home, messages
 
-
-async def main():
+async def main() -> None:
     env_vars = get_env_vars()
 
     app = AsyncApp(

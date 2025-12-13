@@ -1,6 +1,6 @@
 import pytest
 
-from lsimons_bot.messages.app_mention import app_mention
+from lsimons_bot.slack.messages.app_mention import app_mention
 
 
 class TestAppMention:

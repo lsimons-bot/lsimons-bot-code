@@ -1,6 +1,6 @@
 import pytest
 
-from lsimons_bot.home.app_home_opened import app_home_opened
+from lsimons_bot.slack.home.app_home_opened import app_home_opened
 
 
 class TestAppHomeOpened:

@@ -3,7 +3,7 @@ from unittest.mock import patch
 
 import pytest
 
-from lsimons_bot.config import get_env_vars, validate_env_vars
+from lsimons_bot.app.config import get_env_vars, validate_env_vars
 
 
 class TestValidateEnvVars:

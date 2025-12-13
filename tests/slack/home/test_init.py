@@ -1,6 +1,6 @@
 from unittest.mock import MagicMock
 
-from lsimons_bot.home import register
+from lsimons_bot.slack.home import register
 
 
 class TestRegister:

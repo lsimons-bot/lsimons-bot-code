@@ -2,7 +2,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 
-from lsimons_bot.app import main
+from lsimons_bot.app.main import main
 
 
 class TestMain:
@@ -14,12 +14,12 @@ class TestMain:
         }
 
         with (
-            patch("lsimons_bot.app.get_env_vars", return_value=mock_env_vars),
-            patch("lsimons_bot.app.AsyncApp"),
-            patch("lsimons_bot.app.assistant.register"),
-            patch("lsimons_bot.app.messages.register"),
-            patch("lsimons_bot.app.home.register"),
-            patch("lsimons_bot.app.AsyncSocketModeHandler") as mock_handler_class,
+            patch("lsimons_bot.app.main.get_env_vars", return_value=mock_env_vars),
+            patch("lsimons_bot.app.main.AsyncApp"),
+            patch("lsimons_bot.app.main.assistant.register"),
+            patch("lsimons_bot.app.main.messages.register"),
+            patch("lsimons_bot.app.main.home.register"),
+            patch("lsimons_bot.app.main.AsyncSocketModeHandler") as mock_handler_class,
         ):
             mock_handler = MagicMock()
             mock_handler.start_async = AsyncMock()

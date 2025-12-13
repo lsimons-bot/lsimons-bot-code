@@ -1,6 +1,6 @@
 import pytest
 
-from lsimons_bot.messages.message import message
+from lsimons_bot.slack.messages.message import message
 
 
 class TestMessage:
