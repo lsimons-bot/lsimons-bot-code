@@ -57,8 +57,8 @@ uv run --env-file .env ./app.py
 uv run black .
 
 # Run linting
-uv run flake8 lsimons_bot tests
-uv run basedpyright lsimons_bot tests
+uv run flake8 app.py lsimons_bot tests
+uv run basedpyright app.py lsimons_bot
 
 # Run all tests
 uv run pytest .

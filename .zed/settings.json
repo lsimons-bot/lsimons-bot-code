@@ -1,0 +1,13 @@
+{
+  "languages": {
+    "Python": {
+      "preferred_line_length": 125,
+      "formatter": {
+        "external": {
+          "command": "black",
+          "arguments": ["--stdin-filename", "{buffer_path}", "-"]
+        }
+      }
+    }
+  }
+}

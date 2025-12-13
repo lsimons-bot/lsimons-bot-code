@@ -1,0 +1,16 @@
+{
+  "exclude": [
+    "**/node_modules",
+    "**/__pycache__",
+    "**/.venv",
+    "**/tests",
+    "**/.*"
+  ],
+  "ignore": [
+    "**/node_modules",
+    "**/__pycache__",
+    "**/.venv",
+    "**/tests",
+    "**/.*"
+  ]
+}
