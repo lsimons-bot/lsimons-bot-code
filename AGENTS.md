@@ -172,9 +172,11 @@ This codebase values **compact, pragmatic code**. Follow these patterns:
 
 #### Test Organization
 
-- **Mirror source structure**:
-  - Simple modules → single test file (e.g., `test_app.py`)
-  - Multi-file modules → test submodule (e.g., `tests/assistant/`)
+- **Mirror source structure**: All modules with submodules get test submodules
+  - `lsimons_bot/assistant/` → `tests/assistant/`
+  - `lsimons_bot/home/` → `tests/home/`
+  - Simple single-file modules → single test file (e.g., `lsimons_bot/config.py` → `tests/test_config.py`)
+  - Each source file gets its own test file (e.g., `assistant_message.py` → `test_assistant_message.py`)
 - **Pragmatic testing**:
   - Aim for 100% coverage with minimal tests
   - Focus on happy path + key error cases
