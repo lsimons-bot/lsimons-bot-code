@@ -1,6 +1,5 @@
 # pyright: reportExplicitAny=none, reportUnknownMemberType=none
 import logging
-import random
 from asyncio import sleep
 from typing import Any, cast
 
@@ -13,67 +12,56 @@ from slack_bolt.async_app import (
 from slack_sdk.web.async_client import AsyncWebClient
 from slack_sdk.web.async_slack_response import AsyncSlackResponse
 
+from lsimons_bot.bot.bot import Bot, Messages
+
 logger = logging.getLogger(__name__)
 
 
-loading_messages = [
-    "Teaching the hamsters to type faster…",
-    "Untangling the internet cables…",
-    "Consulting the office goldfish…",
-    "Polishing up the response just for you…",
-    "Convincing the AI to stop overthinking…",
-]
+def assistant_message_handler_maker(
+    bot: Bot,
+):
+    async def assistant_message(
+        context: AsyncBoltContext,
+        payload: dict[str, Any],
+        say: AsyncSay,
+        set_status: AsyncSetStatus,
+        set_title: AsyncSetTitle,
+        client: AsyncWebClient,
+    ) -> None:
+        user_message = cast(str, payload.get("text", ""))
+        logger.debug(">> assistant_message('%s',...)", user_message)
+        channel_id = context.channel_id
+        thread_ts = context.thread_ts
+        messages: Messages = []
+        loading_messages = bot.loading_messages()
 
-response_messages = [
-    "That's interesting. Tell me more?",
-    "What makes you say that?",
-    "I'm not sure. Please elaborate.",
-    "Can you provide more details?",
-    "How does that make you feel?",
-]
+        if len(user_message) <= 50:
+            _ = await set_title(user_message)
 
+        _ = await set_status(status="thinking...", loading_messages=loading_messages)
+        await sleep(0.05)
 
-def pick_response_message() -> str:
-    return random.choice(response_messages)
+        if channel_id is not None and thread_ts is not None:
+            try:
+                messages = await read_thread(client, channel_id, thread_ts)
+            except Exception as e:
+                logger.error("Error reading the message thread: %s", e)
+                _ = await say(f"Error reading the message thread: {e}")
+                return
+        else:
+            messages = [{"role": "user", "content": user_message}]
+        logger.debug("message thread: %s", messages)
 
+        await sleep(0.05)
+        response = await bot.chat(messages)
+        _ = await say(response)
+        logger.debug("<< assistant_message()")
 
-async def assistant_message(
-    context: AsyncBoltContext,
-    payload: dict[str, Any],
-    say: AsyncSay,
-    set_status: AsyncSetStatus,
-    set_title: AsyncSetTitle,
-    client: AsyncWebClient,
-) -> None:
-    user_message = cast(str, payload.get("text", ""))
-    logger.debug(">> assistant_message('%s',...)", user_message)
-    channel_id = context.channel_id
-    thread_ts = context.thread_ts
-    messages: list[dict[str, str]] = []
-
-    _ = await set_title(user_message)
-    _ = await set_status(status="thinking...", loading_messages=loading_messages)
-    await sleep(0.05)
-
-    if channel_id is not None and thread_ts is not None:
-        try:
-            messages = await read_thread(client, channel_id, thread_ts)
-        except Exception as e:
-            logger.error("Error reading the message thread: %s", e)
-            _ = await say(f"Error reading the message thread: {e}")
-            return
-    else:
-        messages = [{"role": "user", "content": user_message}]
-    logger.debug("message thread: %s", messages)
-
-    await sleep(0.05)
-    response = pick_response_message()
-    _ = await say(response)
-    logger.debug("<< assistant_message()")
+    return assistant_message
 
 
-async def read_thread(client: AsyncWebClient, channel_id: str, thread_ts: str) -> list[dict[str, str]]:
-    messages: list[dict[str, str]] = []
+async def read_thread(client: AsyncWebClient, channel_id: str, thread_ts: str) -> Messages:
+    messages: Messages = []
     replies: AsyncSlackResponse = await client.conversations_replies(
         channel=channel_id,
         ts=thread_ts,
@@ -86,6 +74,8 @@ async def read_thread(client: AsyncWebClient, channel_id: str, thread_ts: str) -
         if message_text.strip() == "":
             continue
         bot_id = message.get("bot_id")
-        role = "user" if bot_id is None else "assistant"
-        messages.append({"role": role, "content": message_text})
+        if bot_id is None:
+            messages.append({"role": "user", "content": message_text})
+        else:
+            messages.append({"role": "assistant", "content": message_text})
     return messages

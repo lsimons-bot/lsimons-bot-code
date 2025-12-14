@@ -11,9 +11,9 @@ class TestMain:
         mock_env_vars = {
             "SLACK_BOT_TOKEN": "xoxb-test-token",
             "SLACK_APP_TOKEN": "xapp-test-token",
-            "OPENAI_BASE_URL": "http://localhost:8000",
-            "OPENAI_API_KEY": "test-key",
-            "OPENAI_MODEL": "gpt-4",
+            "LITELLM_API_BASE": "http://localhost:8000",
+            "LITELLM_API_KEY": "test-key",
+            "ASSISTANT_MODEL": "test/gpt-5-mini",
         }
 
         with (

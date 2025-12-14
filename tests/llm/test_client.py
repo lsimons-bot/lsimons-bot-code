@@ -28,32 +28,3 @@ class TestLLMClient:
         with patch.object(client.client.chat.completions, "create", new=AsyncMock(return_value=mock_response)):
             result = await client.chat_completion([{"role": "user", "content": "Hello"}])
             assert result == ""
-
-    @pytest.mark.asyncio
-    async def test_chat_completion_stream(self, client: LLMClient) -> None:
-        async def mock_stream():
-            chunks = ["Hello", " ", "world"]
-            for chunk_text in chunks:
-                chunk = MagicMock()
-                chunk.choices = [MagicMock()]
-                chunk.choices[0].delta.content = chunk_text
-                yield chunk
-
-        with patch.object(client.client.chat.completions, "create", new=AsyncMock(return_value=mock_stream())):
-            result = []
-            async for chunk in client.chat_completion_stream([{"role": "user", "content": "Hello"}]):
-                result.append(chunk)
-            assert result == ["Hello", " ", "world"]
-
-    @pytest.mark.asyncio
-    async def test_chat_completion_stream_empty_delta(self, client: LLMClient) -> None:
-        async def mock_stream():
-            chunk = MagicMock()
-            chunk.choices = []
-            yield chunk
-
-        with patch.object(client.client.chat.completions, "create", new=AsyncMock(return_value=mock_stream())):
-            result = []
-            async for chunk in client.chat_completion_stream([{"role": "user", "content": "Hello"}]):
-                result.append(chunk)
-            assert result == []

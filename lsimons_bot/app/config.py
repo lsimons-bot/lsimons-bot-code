@@ -3,9 +3,9 @@ import os
 REQUIRED_VARS = [
     "SLACK_BOT_TOKEN",
     "SLACK_APP_TOKEN",
-    "OPENAI_BASE_URL",
-    "OPENAI_API_KEY",
-    "OPENAI_MODEL",
+    "LITELLM_API_BASE",
+    "LITELLM_API_KEY",
+    "ASSISTANT_MODEL",
 ]
 
 

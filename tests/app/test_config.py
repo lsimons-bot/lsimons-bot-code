@@ -25,9 +25,9 @@ class TestGetEnvVars:
             {
                 "SLACK_BOT_TOKEN": "xoxb-test",
                 "SLACK_APP_TOKEN": "xapp-test",
-                "OPENAI_BASE_URL": "http://localhost:8000",
-                "OPENAI_API_KEY": "test-key",
-                "OPENAI_MODEL": "gpt-4",
+                "LITELLM_API_BASE": "http://localhost:8000",
+                "LITELLM_API_KEY": "test-key",
+                "ASSISTANT_MODEL": "test/gpt-5-mini",
             },
             clear=True,
         ):
@@ -35,9 +35,9 @@ class TestGetEnvVars:
             assert result == {
                 "SLACK_BOT_TOKEN": "xoxb-test",
                 "SLACK_APP_TOKEN": "xapp-test",
-                "OPENAI_BASE_URL": "http://localhost:8000",
-                "OPENAI_API_KEY": "test-key",
-                "OPENAI_MODEL": "gpt-4",
+                "LITELLM_API_BASE": "http://localhost:8000",
+                "LITELLM_API_KEY": "test-key",
+                "ASSISTANT_MODEL": "test/gpt-5-mini",
             }
 
     def test_missing_env_vars(self) -> None:
