@@ -2,6 +2,8 @@
 
 This is a Python AI bot for Schuberg Philis Slack workspace, providing AI assistant capabilities integrated with Slack's Assistant API and LiteLLM proxy for LLM access.
 
+![Screenshot of lsimons-bot](docs/screenshot.png)
+
 # Setup for development
 
 ## Install Dependencies
