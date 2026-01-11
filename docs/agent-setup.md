@@ -90,6 +90,7 @@ Date:   Fri Jan 2 16:49:26 2026 +0100
   * `ghostty`
   * `github`
   * `zed`
+  * `tmux`
 * Make Brave default browser, configure its settings
 * Go to https://my.1password.eu/ and sign in with bot account
 * Set up 1Password Browser Extension, Desktop App, CLI
