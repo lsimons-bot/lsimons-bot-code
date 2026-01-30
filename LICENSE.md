@@ -1,15 +1,7 @@
-For new code:
-
-Copyright (c) 2025 Schuberg Philis
-
-Private and confidential. All rights reserved.
-
-
-
-For the original Slack template code:
-
 MIT License
 
+Copyright (c) 2025 Leo Simons
+Copyright (c) 2025 Schuberg Philis
 Copyright (c) 2023 Slack Technologies, LLC
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
