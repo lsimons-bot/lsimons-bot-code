@@ -40,7 +40,7 @@ lsimons_bot/
 uv python install
 uv venv
 source .venv/bin/activate
-uv pip install -r requirements.txt
+uv sync --all-groups
 ```
 
 ### Environment Variables
@@ -62,7 +62,7 @@ cp .env.example .env
 - `WORDPRESS_CLIENT_ID`, `WORDPRESS_CLIENT_SECRET` - OAuth app credentials
 - `WORDPRESS_SITE_ID` - Target site ID
 - `GITHUB_TOKEN` - GitHub personal access token
-- `LLM_BASE_URL`, `LLM_AUTH_TOKEN`, `LLM_DEFAULT_MODEL` - LLM config for content generation
+- LLM configuration via [lsimons-llm](https://github.com/lsimons-bot/lsimons-llm) environment variables
 
 ### Slack App Configuration
 
@@ -101,17 +101,17 @@ See [AGENTS.md](./AGENTS.md) for development guidelines.
 
 ```bash
 # Format
-uv run black .
+uv run ruff format .
 
 # Lint
-uv run flake8 app.py lsimons_bot tests
-uv run basedpyright app.py lsimons_bot
+uv run ruff check .
+uv run pyright
 
 # Test
-uv run pytest .
+uv run pytest
 
 # Test with coverage
-uv run pytest . --cov=lsimons_bot
+uv run pytest --cov=lsimons_bot
 ```
 
 ## Documentation

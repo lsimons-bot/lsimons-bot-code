@@ -2,7 +2,7 @@ import logging
 from dataclasses import dataclass
 
 from lsimons_bot.blog.github import CommitStats
-from lsimons_bot.llm.client import LLMClient
+from lsimons_llm.async_client import AsyncLLMClient
 
 logger = logging.getLogger(__name__)
 
@@ -47,13 +47,13 @@ def _format_commits(stats: CommitStats) -> str:
     return "\n".join(lines)
 
 
-async def generate_blog_post(llm: LLMClient, stats: CommitStats) -> BlogContent:
+async def generate_blog_post(llm: AsyncLLMClient, stats: CommitStats) -> BlogContent:
     logger.info("Generating blog post from %d commits", stats.total_commits)
 
     commits_summary = _format_commits(stats)
     prompt = POST_PROMPT_TEMPLATE.format(commits_summary=commits_summary)
 
-    response = await llm.chat_completion(
+    response = await llm.chat(
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": prompt},

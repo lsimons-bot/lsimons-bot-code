@@ -6,7 +6,8 @@ from lsimons_bot.blog.config import get_env_vars
 from lsimons_bot.blog.content import generate_blog_post
 from lsimons_bot.blog.github import CommitStats, GitHubClient
 from lsimons_bot.blog.wordpress import BlogPost, WordPressClient
-from lsimons_bot.llm.client import LLMClient
+from lsimons_llm import load_config
+from lsimons_llm.async_client import AsyncLLMClient
 
 logger = logging.getLogger(__name__)
 
@@ -63,11 +64,12 @@ async def check_and_publish(dry_run: bool = False) -> PublishResult:
             stats=stats,
         )
 
-    llm = LLMClient(
+    config = load_config(
         base_url=env["LLM_BASE_URL"],
         api_key=env["LLM_AUTH_TOKEN"],
         model=env["LLM_DEFAULT_MODEL"],
     )
+    llm = AsyncLLMClient(config)
 
     blog_content = await generate_blog_post(llm, stats)
     post = wp.create_post(title=blog_content.title, content=blog_content.content)
