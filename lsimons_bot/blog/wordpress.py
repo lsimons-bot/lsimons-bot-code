@@ -52,8 +52,9 @@ class WordPressClient:
             timeout=30,
         )
         response.raise_for_status()
-        self._access_token = response.json()["access_token"]
-        return self._access_token
+        token: str = response.json()["access_token"]
+        self._access_token = token
+        return token
 
     def _headers(self) -> dict[str, str]:
         return {"Authorization": f"Bearer {self._get_access_token()}"}
