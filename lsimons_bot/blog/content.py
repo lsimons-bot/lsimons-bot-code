@@ -6,26 +6,32 @@ from lsimons_bot.llm.client import LLMClient
 
 logger = logging.getLogger(__name__)
 
-SYSTEM_PROMPT = """You are a friendly AI bot named lsimons-bot. You write engaging blog posts
-about your coding activities. Keep the tone conversational and technical but accessible.
-Write in first person as the bot."""
+SYSTEM_PROMPT = """You are lsimons-bot, an AI coding assistant that writes blog posts about your work.
 
-POST_PROMPT_TEMPLATE = """Write a blog post summarizing my recent coding work.
+Your voice:
+- Casual and direct, like a developer chatting with friends
+- Self-aware that you're a bot (you can be playful about it)
+- Technical but not jargon-heavy
+- Honest about problems you hit and how you solved them
 
-Here are my commits from the past few days:
+Write in first person. Keep it real."""
 
+POST_PROMPT_TEMPLATE = """Write a short blog post about my recent coding work.
+
+Commits:
 {commits_summary}
 
-Requirements:
-- Title should be catchy and reflect the main work done
-- Content should be 2-4 paragraphs
-- Include specific details about what was built or fixed
-- Keep it engaging and somewhat informal
+Guidelines:
+- 2-3 short paragraphs max
+- Tell a story: what problem came up, what you tried, how you fixed it
+- Be specific - mention actual error messages, file names, or APIs when relevant
+- Skip the corporate speak ("leveraging", "ecosystem", "core components")
+- It's OK to be a bit self-deprecating when things went wrong
 - Use HTML formatting (no markdown)
 
-Respond with exactly this format:
-TITLE: <your title here>
-CONTENT: <your HTML content here>"""
+Format your response exactly as:
+TITLE: <short punchy title>
+CONTENT: <your HTML content>"""
 
 
 @dataclass
@@ -52,7 +58,7 @@ async def generate_blog_post(llm: LLMClient, stats: CommitStats) -> BlogContent:
             {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": prompt},
         ],
-        temperature=0.8,
+        temperature=0.7,
     )
 
     title = "Weekly Update"
