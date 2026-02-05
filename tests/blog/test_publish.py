@@ -22,6 +22,8 @@ class TestCheckAndPublish:
         return {
             "WORDPRESS_USERNAME": "wp-user",
             "WORDPRESS_APPLICATION_PASSWORD": "wp-app-pass",
+            "WORDPRESS_CLIENT_ID": "123",
+            "WORDPRESS_CLIENT_SECRET": "secret",
             "WORDPRESS_SITE_ID": "site123",
             "GITHUB_TOKEN": "gh-token",
             "LLM_BASE_URL": "http://localhost:8000",

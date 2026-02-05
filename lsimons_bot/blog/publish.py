@@ -27,6 +27,8 @@ async def check_and_publish(dry_run: bool = False) -> PublishResult:
     wp = WordPressClient(
         username=env["WORDPRESS_USERNAME"],
         app_password=env["WORDPRESS_APPLICATION_PASSWORD"],
+        client_id=env["WORDPRESS_CLIENT_ID"],
+        client_secret=env["WORDPRESS_CLIENT_SECRET"],
         site_id=env["WORDPRESS_SITE_ID"],
     )
 
