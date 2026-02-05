@@ -1,17 +1,40 @@
-# Slack Bot that automates part of Leo Simons' (lsimons) work at Schuberg Philis
+# lsimons-bot
 
-This is a Python AI bot for Schuberg Philis Slack workspace, providing AI assistant capabilities integrated with Slack's Assistant API and LiteLLM proxy for LLM access.
+Python AI bot for Schuberg Philis Slack workspace, automating parts of Leo Simons' work.
 
 ![Screenshot of lsimons-bot](docs/screenshot.png)
 
-# Setup for development
+## Features
 
-## Install Dependencies
+**Slack AI Assistant** - Interactive chat via Slack's Assistant API, powered by LLM through LiteLLM proxy. Maintains thread context, shows thinking status, suggests follow-up prompts.
+
+**Blog Automation** - Monitors GitHub activity, generates blog posts summarizing significant commits, publishes to WordPress.com. Runs as scheduled CLI command.
+
+## Architecture
+
+```
+lsimons_bot/
+├── app/           # Bootstrap (main.py, config.py)
+├── bot/           # Bot abstraction with system prompt
+├── llm/           # AsyncOpenAI client for LiteLLM proxy
+├── slack/         # Slack integration layer
+│   ├── assistant/ # AI Assistant API handlers
+│   ├── home/      # Home tab handlers
+│   └── messages/  # Message event handlers
+└── blog/          # Blog automation module
+    ├── github.py  # GitHub commit fetching
+    ├── wordpress.py # WordPress.com API client
+    ├── content.py # LLM-based content generation
+    └── publish.py # Orchestration logic
+```
+
+## Setup
+
+### Dependencies
 
 * [slack cli](https://slack.dev/cli/)
 * [uv](https://pypi.org/project/uv/)
 * [basedpyright](https://pypi.org/project/basedpyright/)
-
 
 ```bash
 uv python install
@@ -20,65 +43,93 @@ source .venv/bin/activate
 uv pip install -r requirements.txt
 ```
 
-## Configure Environment Variables
+### Environment Variables
 
 ```bash
-cp .env.exmaple .env
+cp .env.example .env
+# Edit .env with your credentials
 ```
 
-## Slack App Configuration
+**Slack Assistant** requires:
+- `SLACK_BOT_TOKEN` - Bot OAuth token
+- `SLACK_APP_TOKEN` - App-level token for socket mode
+- `LITELLM_API_BASE` - LiteLLM proxy URL
+- `LITELLM_API_KEY` - LiteLLM API key
+- `ASSISTANT_MODEL` - Model name (e.g., `gpt-4`)
+
+**Blog Module** requires:
+- `WORDPRESS_USERNAME`, `WORDPRESS_APPLICATION_PASSWORD` - WordPress.com credentials
+- `WORDPRESS_CLIENT_ID`, `WORDPRESS_CLIENT_SECRET` - OAuth app credentials
+- `WORDPRESS_SITE_ID` - Target site ID
+- `GITHUB_TOKEN` - GitHub personal access token
+- `LLM_BASE_URL`, `LLM_AUTH_TOKEN`, `LLM_DEFAULT_MODEL` - LLM config for content generation
+
+### Slack App Configuration
 
 ```bash
 slack help
+slack app settings  # Opens web settings
 ```
 
-The `manifest.json` file is the initial config, but ongoing changes are made through the web settings:
+The `manifest.json` contains initial config; ongoing changes via web settings.
 
-```bash
-slack app settings
-```
+## Usage
 
-# Development
-
-See [AGENTS.md](./AGENTS.md) for development guidelines, including:
-- Project structure and organization
-- Testing and code quality standards
-- Git workflow and commit conventions
-
-## Running the bot
+### Running the Slack Bot
 
 ```bash
 uv run --env-file .env ./app.py
 ```
 
-## Formatting, Linting, Tests
+### Running the Blog Publisher
 
 ```bash
-# Format code
+# Dry run (no publishing)
+python -m lsimons_bot.blog --dry-run --verbose
+
+# Publish if significant activity
+python -m lsimons_bot.blog
+```
+
+Blog publishes when: >48 hours since last post AND (>5 commits OR any commit >200 lines changed).
+
+## Development
+
+See [AGENTS.md](./AGENTS.md) for development guidelines.
+
+### Formatting, Linting, Tests
+
+```bash
+# Format
 uv run black .
 
-# Run linting
+# Lint
 uv run flake8 app.py lsimons_bot tests
 uv run basedpyright app.py lsimons_bot
 
-# Run all tests
+# Test
 uv run pytest .
 
-# Run with coverage
+# Test with coverage
 uv run pytest . --cov=lsimons_bot
 ```
 
 ## Documentation
 
-See [docs](./docs) for additional documentation:
-- [docs/spec/000-shared-patterns.md](./docs/spec/000-shared-patterns.md) - Common code patterns
-- [docs/spec/001-spec-based-development.md](./docs/spec/001-spec-based-development.md) - How to write and implement specs
-- [docs/spec/002-slack-client.md](./docs/spec/002-slack-client.md) - Slack integration architecture
+### Specs
 
-Reference docs for slack api:
-- [async app docs](https://docs.slack.dev/tools/bolt-python/reference/async_app.html)
-- [async web client docs](https://docs.slack.dev/tools/python-slack-sdk/reference/web/async_client.html)
-- [slack api methods](https://api.slack.com/methods)
+- [000-shared-patterns.md](./docs/spec/000-shared-patterns.md) - Spec template
+- [001-spec-based-development.md](./docs/spec/001-spec-based-development.md) - How to write specs
+- [002-slack-client.md](./docs/spec/002-slack-client.md) - Slack integration architecture
+- [003-blog-module.md](./docs/spec/003-blog-module.md) - Blog automation design
+- [004-bot-llm-layer.md](./docs/spec/004-bot-llm-layer.md) - Bot and LLM abstraction
+- [005-application-bootstrap.md](./docs/spec/005-application-bootstrap.md) - Application startup
+
+### Slack API References
+
+- [Async App docs](https://docs.slack.dev/tools/bolt-python/reference/async_app.html)
+- [Async Web Client docs](https://docs.slack.dev/tools/python-slack-sdk/reference/web/async_client.html)
+- [Slack API methods](https://api.slack.com/methods)
 
 ## License
 
