@@ -51,10 +51,7 @@ class GitHubClient:
         repos = list(user.get_repos())
         logger.debug("Found %d repos for user %s", len(repos), self.username)
         for repo in repos:
-            logger.debug("Processing repo: %s (fork=%s)", repo.name, repo.fork)
-            if repo.fork:
-                continue
-
+            logger.debug("Processing repo: %s", repo.name)
             try:
                 repo_commits = list(repo.get_commits(author=GITHUB_AUTHOR_EMAIL, since=since_naive))
                 logger.debug("Repo %s: found %d commits", repo.name, len(repo_commits))

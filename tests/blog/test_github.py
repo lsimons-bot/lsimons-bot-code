@@ -36,7 +36,6 @@ class TestGitHubClient:
         mock_github = MagicMock()
         mock_user = MagicMock()
         mock_repo = MagicMock()
-        mock_repo.fork = False
         mock_repo.name = "test-repo"
 
         mock_commit = MagicMock()
@@ -58,20 +57,3 @@ class TestGitHubClient:
         assert result.total_commits == 1
         assert result.max_lines_in_commit == 15
         assert result.commits[0].sha == "abc1234"
-
-    def test_skips_forks(self) -> None:
-        mock_github = MagicMock()
-        mock_user = MagicMock()
-        mock_repo = MagicMock()
-        mock_repo.fork = True
-
-        mock_user.get_repos.return_value = [mock_repo]
-        mock_github.get_user.return_value = mock_user
-
-        with patch("lsimons_bot.blog.github.Github", return_value=mock_github):
-            client = GitHubClient(token="token")
-            since = datetime(2024, 1, 1, tzinfo=timezone.utc)
-            result = client.get_commits_since(since)
-
-        assert result.total_commits == 0
-        mock_repo.get_commits.assert_not_called()
