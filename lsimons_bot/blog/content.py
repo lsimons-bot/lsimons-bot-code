@@ -43,7 +43,9 @@ class BlogContent:
 def _format_commits(stats: CommitStats) -> str:
     lines: list[str] = []
     for commit in stats.commits[:20]:
-        lines.append(f"- [{commit.repo_name}] {commit.message} (+{commit.additions}/-{commit.deletions})")
+        lines.append(
+            f"- [{commit.repo_name}] {commit.message} (+{commit.additions}/-{commit.deletions})"
+        )
     return "\n".join(lines)
 
 

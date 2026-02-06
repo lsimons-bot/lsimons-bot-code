@@ -14,7 +14,9 @@ class TestValidateEnvVars:
 
     def test_missing_variables(self) -> None:
         with patch.dict(os.environ, {}, clear=True):
-            with pytest.raises(Exception, match="Missing required environment variables"):
+            with pytest.raises(
+                Exception, match="Missing required environment variables"
+            ):
                 validate_env_vars(["VAR1", "VAR2"])
 
 
@@ -37,5 +39,7 @@ class TestGetEnvVars:
 
     def test_missing_env_vars(self) -> None:
         with patch.dict(os.environ, {}, clear=True):
-            with pytest.raises(Exception, match="Missing required environment variables"):
+            with pytest.raises(
+                Exception, match="Missing required environment variables"
+            ):
                 get_env_vars()

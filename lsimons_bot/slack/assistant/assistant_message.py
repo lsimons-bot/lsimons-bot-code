@@ -60,7 +60,9 @@ def assistant_message_handler_maker(
     return assistant_message
 
 
-async def read_thread(client: AsyncWebClient, channel_id: str, thread_ts: str) -> Messages:
+async def read_thread(
+    client: AsyncWebClient, channel_id: str, thread_ts: str
+) -> Messages:
     messages: Messages = []
     replies: AsyncSlackResponse = await client.conversations_replies(
         channel=channel_id,

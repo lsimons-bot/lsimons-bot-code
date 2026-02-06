@@ -11,7 +11,10 @@ class TestMain:
 
         with (
             patch.object(sys, "argv", ["blog"]),
-            patch("lsimons_bot.blog.__main__.check_and_publish", new=AsyncMock(return_value=result)),
+            patch(
+                "lsimons_bot.blog.__main__.check_and_publish",
+                new=AsyncMock(return_value=result),
+            ),
         ):
             exit_code = main()
 
@@ -22,7 +25,10 @@ class TestMain:
 
         with (
             patch.object(sys, "argv", ["blog"]),
-            patch("lsimons_bot.blog.__main__.check_and_publish", new=AsyncMock(return_value=result)),
+            patch(
+                "lsimons_bot.blog.__main__.check_and_publish",
+                new=AsyncMock(return_value=result),
+            ),
         ):
             exit_code = main()
 

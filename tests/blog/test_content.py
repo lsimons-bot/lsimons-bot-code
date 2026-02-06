@@ -35,7 +35,9 @@ class TestGenerateBlogPost:
     @pytest.mark.asyncio
     async def test_generate_blog_post(self, commit_stats: CommitStats) -> None:
         mock_llm = MagicMock()
-        mock_llm.chat_completion = AsyncMock(return_value="TITLE: My Blog Post\nCONTENT: <p>This is the content.</p>")
+        mock_llm.chat = AsyncMock(
+            return_value="TITLE: My Blog Post\nCONTENT: <p>This is the content.</p>"
+        )
 
         result = await generate_blog_post(mock_llm, commit_stats)
 
@@ -45,7 +47,7 @@ class TestGenerateBlogPost:
     @pytest.mark.asyncio
     async def test_generate_blog_post_fallback(self, commit_stats: CommitStats) -> None:
         mock_llm = MagicMock()
-        mock_llm.chat_completion = AsyncMock(return_value="Some unparseable response")
+        mock_llm.chat = AsyncMock(return_value="Some unparseable response")
 
         result = await generate_blog_post(mock_llm, commit_stats)
 

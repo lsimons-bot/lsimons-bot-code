@@ -7,9 +7,15 @@ from lsimons_bot.blog.publish import check_and_publish
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Publish blog posts about recent GitHub activity")
-    parser.add_argument("--dry-run", action="store_true", help="Check but don't publish")
-    parser.add_argument("--verbose", "-v", action="store_true", help="Enable verbose logging")
+    parser = argparse.ArgumentParser(
+        description="Publish blog posts about recent GitHub activity"
+    )
+    parser.add_argument(
+        "--dry-run", action="store_true", help="Check but don't publish"
+    )
+    parser.add_argument(
+        "--verbose", "-v", action="store_true", help="Enable verbose logging"
+    )
     args = parser.parse_args()
 
     logging.basicConfig(

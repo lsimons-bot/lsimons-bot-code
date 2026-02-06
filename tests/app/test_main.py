@@ -18,7 +18,8 @@ class TestMain:
 
         with (
             patch("lsimons_bot.app.main.get_env_vars", return_value=mock_env_vars),
-            patch("lsimons_bot.app.main.LLMClient"),
+            patch("lsimons_bot.app.main.load_config"),
+            patch("lsimons_bot.app.main.AsyncLLMClient"),
             patch("lsimons_bot.app.main.AsyncApp"),
             patch("lsimons_bot.app.main.assistant.register"),
             patch("lsimons_bot.app.main.messages.register"),

@@ -1,4 +1,4 @@
-from typing import override
+from typing import Any, cast, override
 
 from slack_bolt.adapter.socket_mode.async_handler import AsyncSocketModeHandler
 from slack_bolt.async_app import AsyncApp
@@ -17,7 +17,7 @@ class LLMBot(Bot):
 
     @override
     async def chat_completion(self, messages: Messages) -> str:
-        return await self.llm.chat(messages)
+        return await self.llm.chat(cast(list[dict[str, Any]], list(messages)))
 
 
 async def main() -> None:
