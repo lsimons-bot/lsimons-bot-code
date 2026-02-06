@@ -4,7 +4,7 @@
 
 **Requirements:**
 - Check WordPress.com for last blog post date
-- If >48 hours since last post, fetch GitHub commits by lsimons-bot
+- If >24 hours since last post, fetch GitHub commits by lsimons-bot
 - If significant work (>5 commits OR any commit >200 lines), generate blog post via LLM
 - Publish to WordPress.com
 - CLI invocable: `python -m lsimons_bot.blog` with `--dry-run` option

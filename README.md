@@ -91,7 +91,7 @@ python -m lsimons_bot.blog --dry-run --verbose
 python -m lsimons_bot.blog
 ```
 
-Blog publishes when: >48 hours since last post AND (>5 commits OR any commit >200 lines changed).
+Blog publishes when: >24 hours since last post AND (>5 commits OR any commit >200 lines changed).
 
 ## Development
 

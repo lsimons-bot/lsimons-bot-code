@@ -11,7 +11,7 @@ from lsimons_llm.async_client import AsyncLLMClient
 
 logger = logging.getLogger(__name__)
 
-HOURS_THRESHOLD = 48
+HOURS_THRESHOLD = 24
 
 
 @dataclass
