@@ -25,7 +25,7 @@ class TestCheckAndPublish:
             "WORDPRESS_CLIENT_ID": "123",
             "WORDPRESS_CLIENT_SECRET": "secret",
             "WORDPRESS_SITE_ID": "site123",
-            "GITHUB_TOKEN": "gh-token",
+            "GITHUB_WORDPRESS_TOKEN": "gh-token",
             "LLM_BASE_URL": "http://localhost:8000",
             "LLM_AUTH_TOKEN": "llm-key",
             "LLM_DEFAULT_MODEL": "gpt-4",

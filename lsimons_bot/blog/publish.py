@@ -47,7 +47,7 @@ async def check_and_publish(dry_run: bool = False) -> PublishResult:
     else:
         since_date = now - timedelta(days=7)
 
-    gh = GitHubClient(token=env["GITHUB_TOKEN"])
+    gh = GitHubClient(token=env["GITHUB_WORDPRESS_TOKEN"])
     stats = gh.get_commits_since(since_date)
 
     if not stats.is_significant():
