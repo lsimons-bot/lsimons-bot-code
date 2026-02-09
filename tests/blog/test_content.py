@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
@@ -23,7 +23,7 @@ class TestGenerateBlogPost:
                     repo_name="test-repo",
                     sha="abc1234",
                     message="Add feature",
-                    date=datetime.now(timezone.utc),
+                    date=datetime.now(UTC),
                     additions=100,
                     deletions=20,
                 )

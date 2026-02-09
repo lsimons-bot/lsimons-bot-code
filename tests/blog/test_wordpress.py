@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from unittest.mock import MagicMock, patch
 
 from lsimons_bot.blog.wordpress import BlogPost, WordPressClient
@@ -73,7 +73,7 @@ class TestBlogPost:
         post = BlogPost(
             id=1,
             title="Test",
-            date=datetime.now(timezone.utc),
+            date=datetime.now(UTC),
             link="https://example.com",
         )
         assert post.id == 1

@@ -1,12 +1,14 @@
 import logging
 from dataclasses import dataclass
 
-from lsimons_bot.blog.github import CommitStats
 from lsimons_llm.async_client import AsyncLLMClient
+
+from lsimons_bot.blog.github import CommitStats
 
 logger = logging.getLogger(__name__)
 
-SYSTEM_PROMPT = """You are lsimons-bot, an AI coding assistant that writes blog posts about your work.
+SYSTEM_PROMPT = """\
+You are lsimons-bot, an AI coding assistant that writes blog posts about your work.
 
 Your voice:
 - Casual and direct, like a developer chatting with friends

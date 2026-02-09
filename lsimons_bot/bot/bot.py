@@ -1,12 +1,11 @@
 # pyright: reportUnusedParameter=none
 import random
 from collections.abc import Iterable
-from typing import TypeAlias
 
 from openai.types.chat import ChatCompletionMessageParam
 
-Message: TypeAlias = ChatCompletionMessageParam
-Messages: TypeAlias = Iterable[Message]
+type Message = ChatCompletionMessageParam
+type Messages = Iterable[Message]
 
 
 LOADING_MESSAGES = [
@@ -41,7 +40,8 @@ You don't have access to anything in the Slack workspace except for the current 
 You also don't have access to any external database or knowledge base or API.
 Do not try to guess or fabricate any information.
 When you include markdown text, convert it to be Slack compatible.
-When a prompt has Slack's special syntax like <@USER_ID> or <#CHANNEL_ID>, you must keep them as-is in your response.
+When a prompt has Slack's special syntax like <@USER_ID> or <#CHANNEL_ID>,
+you must keep them as-is in your response.
 
 Your name is lsimons-bot.
 You are the assistant to Leo Simons, an engineer at Schuberg Philis.

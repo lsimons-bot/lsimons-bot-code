@@ -1,12 +1,12 @@
 from typing import Any, cast, override
 
+from lsimons_llm import load_config
+from lsimons_llm.async_client import AsyncLLMClient
 from slack_bolt.adapter.socket_mode.async_handler import AsyncSocketModeHandler
 from slack_bolt.async_app import AsyncApp
 
 from lsimons_bot.app.config import get_env_vars
 from lsimons_bot.bot.bot import Bot, Messages
-from lsimons_llm import load_config
-from lsimons_llm.async_client import AsyncLLMClient
 from lsimons_bot.slack import assistant, home, messages
 
 

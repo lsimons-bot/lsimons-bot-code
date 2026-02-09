@@ -1,13 +1,14 @@
 import logging
 from dataclasses import dataclass
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
+
+from lsimons_llm import load_config
+from lsimons_llm.async_client import AsyncLLMClient
 
 from lsimons_bot.blog.config import get_env_vars
 from lsimons_bot.blog.content import generate_blog_post
 from lsimons_bot.blog.github import CommitStats, GitHubClient
 from lsimons_bot.blog.wordpress import BlogPost, WordPressClient
-from lsimons_llm import load_config
-from lsimons_llm.async_client import AsyncLLMClient
 
 logger = logging.getLogger(__name__)
 
@@ -34,7 +35,7 @@ async def check_and_publish(dry_run: bool = False) -> PublishResult:
     )
 
     latest_post = wp.get_latest_post()
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
 
     if latest_post:
         hours_since = (now - latest_post.date).total_seconds() / 3600
@@ -53,14 +54,20 @@ async def check_and_publish(dry_run: bool = False) -> PublishResult:
     if not stats.is_significant():
         return PublishResult(
             should_publish=False,
-            reason=f"Not enough activity: {stats.total_commits} commits, max {stats.max_lines_in_commit} lines",
+            reason=(
+                f"Not enough activity: {stats.total_commits} commits,"
+                f" max {stats.max_lines_in_commit} lines"
+            ),
             stats=stats,
         )
 
     if dry_run:
         return PublishResult(
             should_publish=True,
-            reason=f"Would publish: {stats.total_commits} commits, max {stats.max_lines_in_commit} lines",
+            reason=(
+                f"Would publish: {stats.total_commits} commits,"
+                f" max {stats.max_lines_in_commit} lines"
+            ),
             stats=stats,
         )
 

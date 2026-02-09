@@ -1,6 +1,6 @@
 import logging
 from dataclasses import dataclass
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import requests
 
@@ -76,7 +76,7 @@ class WordPressClient:
         return BlogPost(
             id=post["id"],
             title=post["title"]["rendered"],
-            date=datetime.fromisoformat(post["date_gmt"]).replace(tzinfo=timezone.utc),
+            date=datetime.fromisoformat(post["date_gmt"]).replace(tzinfo=UTC),
             link=post["link"],
         )
 
@@ -94,6 +94,6 @@ class WordPressClient:
         return BlogPost(
             id=post["id"],
             title=post["title"]["rendered"],
-            date=datetime.now(timezone.utc),
+            date=datetime.now(UTC),
             link=post["link"],
         )

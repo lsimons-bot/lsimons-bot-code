@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from unittest.mock import MagicMock, patch
 
 import pytest
@@ -36,7 +36,7 @@ class TestCheckAndPublish:
         recent_post = BlogPost(
             id=1,
             title="Recent",
-            date=datetime.now(timezone.utc) - timedelta(hours=12),
+            date=datetime.now(UTC) - timedelta(hours=12),
             link="https://example.com",
         )
 
@@ -58,7 +58,7 @@ class TestCheckAndPublish:
         old_post = BlogPost(
             id=1,
             title="Old",
-            date=datetime.now(timezone.utc) - timedelta(hours=72),
+            date=datetime.now(UTC) - timedelta(hours=72),
             link="https://example.com",
         )
         stats = CommitStats(commits=[], total_commits=2, max_lines_in_commit=50)
@@ -86,7 +86,7 @@ class TestCheckAndPublish:
         old_post = BlogPost(
             id=1,
             title="Old",
-            date=datetime.now(timezone.utc) - timedelta(hours=72),
+            date=datetime.now(UTC) - timedelta(hours=72),
             link="https://example.com",
         )
         stats = CommitStats(commits=[], total_commits=10, max_lines_in_commit=300)
