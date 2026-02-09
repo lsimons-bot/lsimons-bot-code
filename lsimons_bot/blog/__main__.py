@@ -14,15 +14,9 @@ class BlogArgs:
 
 
 def _parse_args() -> BlogArgs:
-    parser = argparse.ArgumentParser(
-        description="Publish blog posts about recent GitHub activity"
-    )
-    _ = parser.add_argument(
-        "--dry-run", action="store_true", help="Check but don't publish"
-    )
-    _ = parser.add_argument(
-        "--verbose", "-v", action="store_true", help="Enable verbose logging"
-    )
+    parser = argparse.ArgumentParser(description="Publish blog posts about recent GitHub activity")
+    _ = parser.add_argument("--dry-run", action="store_true", help="Check but don't publish")
+    _ = parser.add_argument("--verbose", "-v", action="store_true", help="Enable verbose logging")
     ns = parser.parse_args(namespace=BlogArgs())
     return ns
 

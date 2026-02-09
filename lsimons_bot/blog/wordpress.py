@@ -79,9 +79,7 @@ class WordPressClient:
         return BlogPost(
             id=int(cast(int, post["id"])),
             title=title_obj["rendered"],
-            date=datetime.fromisoformat(cast(str, post["date_gmt"])).replace(
-                tzinfo=UTC
-            ),
+            date=datetime.fromisoformat(cast(str, post["date_gmt"])).replace(tzinfo=UTC),
             link=cast(str, post["link"]),
         )
 

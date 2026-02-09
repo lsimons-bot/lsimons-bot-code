@@ -27,9 +27,7 @@ class TestWordPressClient:
             }
         ]
 
-        with patch(
-            "lsimons_bot.blog.wordpress.requests.get", return_value=mock_response
-        ):
+        with patch("lsimons_bot.blog.wordpress.requests.get", return_value=mock_response):
             result = client.get_latest_post()
 
         assert result is not None
@@ -41,9 +39,7 @@ class TestWordPressClient:
         mock_response = MagicMock()
         mock_response.json.return_value = []
 
-        with patch(
-            "lsimons_bot.blog.wordpress.requests.get", return_value=mock_response
-        ):
+        with patch("lsimons_bot.blog.wordpress.requests.get", return_value=mock_response):
             result = client.get_latest_post()
 
         assert result is None

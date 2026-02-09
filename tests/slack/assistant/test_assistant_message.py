@@ -42,9 +42,7 @@ class TestAssistantMessage:
 
         assistant_message = assistant_message_handler_maker(mock_bot)
 
-        with patch(
-            "lsimons_bot.slack.assistant.assistant_message.sleep", new=AsyncMock()
-        ):
+        with patch("lsimons_bot.slack.assistant.assistant_message.sleep", new=AsyncMock()):
             await assistant_message(
                 mock_context,
                 {"text": "hello"},
@@ -70,8 +68,6 @@ class TestAssistantMessage:
     @pytest.mark.asyncio
     async def test_assistant_message_error_handling(self) -> None:
         mock_client = MagicMock()
-        mock_client.conversations_replies = AsyncMock(
-            side_effect=Exception("API error")
-        )
+        mock_client.conversations_replies = AsyncMock(side_effect=Exception("API error"))
 
         await self._call_assistant_message("C123", "1234567890.123456", mock_client)

@@ -53,9 +53,7 @@ class GitHubClient:
         for repo in repos:
             logger.debug("Processing repo: %s", repo.name)
             try:
-                repo_commits = list(
-                    repo.get_commits(author=GITHUB_AUTHOR_EMAIL, since=since_naive)
-                )
+                repo_commits = list(repo.get_commits(author=GITHUB_AUTHOR_EMAIL, since=since_naive))
                 logger.debug("Repo %s: found %d commits", repo.name, len(repo_commits))
                 for commit in repo_commits:
                     stats = commit.stats

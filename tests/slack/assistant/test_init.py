@@ -8,9 +8,7 @@ class TestRegister:
         mock_app = MagicMock()
         mock_bot = MagicMock()
 
-        with patch(
-            "lsimons_bot.slack.assistant.AsyncAssistant"
-        ) as mock_assistant_class:
+        with patch("lsimons_bot.slack.assistant.AsyncAssistant") as mock_assistant_class:
             mock_assistant = MagicMock()
             mock_assistant_class.return_value = mock_assistant
 
@@ -29,9 +27,7 @@ class TestRegister:
                     mock_factory.assert_called_once_with(mock_bot)
 
                     # Verify assistant methods were called properly
-                    mock_assistant.thread_started.assert_called_once_with(
-                        mock_thread_started
-                    )
+                    mock_assistant.thread_started.assert_called_once_with(mock_thread_started)
                     mock_assistant.user_message.assert_called_once_with(mock_handler)
 
                     # Verify the assistant was registered with the app
