@@ -1,6 +1,7 @@
 import logging
 from dataclasses import dataclass
 from datetime import UTC, datetime
+from typing import cast
 
 import requests
 
@@ -27,12 +28,12 @@ class WordPressClient:
         client_secret: str,
         site_id: str,
     ) -> None:
-        self.username = username
-        self.app_password = app_password
-        self.client_id = client_id
-        self.client_secret = client_secret
-        self.site_id = site_id
-        self.base_url = f"{BASE_URL}/{site_id}/posts"
+        self.username: str = username
+        self.app_password: str = app_password
+        self.client_id: str = client_id
+        self.client_secret: str = client_secret
+        self.site_id: str = site_id
+        self.base_url: str = f"{BASE_URL}/{site_id}/posts"
         self._access_token: str | None = None
 
     def _get_access_token(self) -> str:
@@ -52,7 +53,8 @@ class WordPressClient:
             timeout=30,
         )
         response.raise_for_status()
-        token: str = response.json()["access_token"]
+        data = cast(dict[str, str], response.json())
+        token = data["access_token"]
         self._access_token = token
         return token
 
@@ -67,17 +69,20 @@ class WordPressClient:
             timeout=30,
         )
         response.raise_for_status()
-        posts = response.json()
+        posts = cast(list[dict[str, object]], response.json())
 
         if not posts:
             return None
 
         post = posts[0]
+        title_obj = cast(dict[str, str], post["title"])
         return BlogPost(
-            id=post["id"],
-            title=post["title"]["rendered"],
-            date=datetime.fromisoformat(post["date_gmt"]).replace(tzinfo=UTC),
-            link=post["link"],
+            id=int(cast(int, post["id"])),
+            title=title_obj["rendered"],
+            date=datetime.fromisoformat(cast(str, post["date_gmt"])).replace(
+                tzinfo=UTC
+            ),
+            link=cast(str, post["link"]),
         )
 
     def create_post(self, title: str, content: str) -> BlogPost:
@@ -89,11 +94,12 @@ class WordPressClient:
             timeout=60,
         )
         response.raise_for_status()
-        post = response.json()
+        post = cast(dict[str, object], response.json())
+        title_obj = cast(dict[str, str], post["title"])
 
         return BlogPost(
-            id=post["id"],
-            title=post["title"]["rendered"],
+            id=int(cast(int, post["id"])),
+            title=title_obj["rendered"],
             date=datetime.now(UTC),
-            link=post["link"],
+            link=cast(str, post["link"]),
         )

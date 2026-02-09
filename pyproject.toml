@@ -27,6 +27,7 @@ select = ["E", "F", "I", "W", "UP", "B", "SIM"]
 [tool.pyright]
 pythonVersion = "3.13"
 typeCheckingMode = "strict"
+reportMissingTypeStubs = false
 
 [dependency-groups]
 dev = [

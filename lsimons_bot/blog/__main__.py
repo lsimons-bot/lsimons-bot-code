@@ -2,29 +2,44 @@ import argparse
 import asyncio
 import logging
 import sys
+from dataclasses import dataclass
 
 from lsimons_bot.blog.publish import check_and_publish
 
 
-def main() -> int:
+@dataclass
+class BlogArgs:
+    dry_run: bool = False
+    verbose: bool = False
+
+
+def _parse_args() -> BlogArgs:
     parser = argparse.ArgumentParser(
         description="Publish blog posts about recent GitHub activity"
     )
-    parser.add_argument(
+    _ = parser.add_argument(
         "--dry-run", action="store_true", help="Check but don't publish"
     )
-    parser.add_argument(
+    _ = parser.add_argument(
         "--verbose", "-v", action="store_true", help="Enable verbose logging"
     )
-    args = parser.parse_args()
+    ns = parser.parse_args(namespace=BlogArgs())
+    return ns
+
+
+def main() -> int:
+    args = _parse_args()
+
+    verbose = args.verbose
+    dry_run = args.dry_run
 
     logging.basicConfig(
-        level=logging.DEBUG if args.verbose else logging.INFO,
+        level=logging.DEBUG if verbose else logging.INFO,
         format="%(levelname)s: %(message)s",
     )
 
     try:
-        result = asyncio.run(check_and_publish(dry_run=args.dry_run))
+        result = asyncio.run(check_and_publish(dry_run=dry_run))
     except Exception as e:
         logging.error("Failed: %s", e)
         return 1

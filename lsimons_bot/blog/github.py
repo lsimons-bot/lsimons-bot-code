@@ -36,8 +36,8 @@ class CommitStats:
 
 class GitHubClient:
     def __init__(self, token: str) -> None:
-        self.client = Github(token)
-        self.username = GITHUB_USERNAME
+        self.client: Github = Github(token)
+        self.username: str = GITHUB_USERNAME
 
     def get_commits_since(self, since: datetime) -> CommitStats:
         logger.info("Fetching commits since %s for user %s", since, self.username)

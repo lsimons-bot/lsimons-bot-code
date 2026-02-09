@@ -1,4 +1,4 @@
-from typing import Any, cast, override
+from typing import cast, override
 
 from lsimons_llm import load_config
 from lsimons_llm.async_client import AsyncLLMClient
@@ -17,7 +17,7 @@ class LLMBot(Bot):
 
     @override
     async def chat_completion(self, messages: Messages) -> str:
-        return await self.llm.chat(cast(list[dict[str, Any]], list(messages)))
+        return await self.llm.chat(cast("list[dict[str, object]]", list(messages)))
 
 
 async def main() -> None:
