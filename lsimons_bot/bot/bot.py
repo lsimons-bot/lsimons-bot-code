@@ -1,4 +1,3 @@
-# pyright: reportUnusedParameter=none
 import random
 from collections.abc import Iterable
 

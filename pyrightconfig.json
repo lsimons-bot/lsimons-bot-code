@@ -13,5 +13,7 @@
     "**/tests",
     "**/.*"
   ],
-  "reportMissingTypeStubs": false
+  "reportMissingTypeStubs": false,
+  "reportExplicitAny": false,
+  "reportUnusedParameter": false
 }

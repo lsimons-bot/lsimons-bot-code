@@ -1,4 +1,4 @@
-# pyright: reportExplicitAny=none, reportUnknownMemberType=none
+# pyright: reportUnknownMemberType=none
 import logging
 from typing import Any
 

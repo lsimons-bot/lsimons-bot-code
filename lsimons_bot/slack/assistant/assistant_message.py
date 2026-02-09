@@ -1,4 +1,4 @@
-# pyright: reportExplicitAny=none, reportUnknownMemberType=none
+# pyright: reportUnknownMemberType=none
 import logging
 from asyncio import sleep
 from typing import Any, cast
