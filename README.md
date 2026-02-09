@@ -105,7 +105,7 @@ uv run ruff format .
 
 # Lint
 uv run ruff check .
-uv run pyright
+uv run basedpyright
 
 # Test
 uv run pytest

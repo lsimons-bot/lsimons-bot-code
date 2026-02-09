@@ -4,11 +4,11 @@ Python AI bot for Schuberg Philis Slack.
 
 ## Quick Reference
 
-- **Setup**: `uv venv && source .venv/bin/activate && uv pip install -r requirements.txt`
+- **Setup**: `uv sync --all-groups`
 - **Run**: `slack run`
-- **Format**: `uv run black .`
-- **Lint**: `uv run flake8 app.py lsimons_bot tests && basedpyright lsimons_bot`
-- **Test**: `uv run pytest .`
+- **Format**: `uv run ruff format .`
+- **Lint**: `uv run ruff check . && uv run basedpyright lsimons_bot`
+- **Test**: `uv run pytest`
 
 ## Structure
 
@@ -30,8 +30,8 @@ lsimons_bot/
 ## Guidelines
 
 **Code quality requirements:**
-- black formatting
-- flake8: zero warnings
+- ruff formatting
+- ruff: zero warnings
 - basedpyright: zero errors
 - Full type annotations
 - Minimum 80% test coverage
@@ -70,9 +70,9 @@ Work is NOT complete until `git push` succeeds.
 
 1. **Quality gates** (if code changed):
    ```bash
-   uv run black . && uv run flake8 app.py lsimons_bot tests
-   basedpyright lsimons_bot
-   uv run pytest .
+   uv run ruff format --check . && uv run ruff check .
+   uv run basedpyright lsimons_bot
+   uv run pytest
    ```
 
 2. **Push**:
