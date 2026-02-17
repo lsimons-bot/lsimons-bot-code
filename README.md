@@ -85,10 +85,10 @@ uv run --env-file .env ./app.py
 
 ```bash
 # Dry run (no publishing)
-python -m lsimons_bot.blog --dry-run --verbose
+uv run python -m lsimons_bot.blog --dry-run --verbose
 
 # Publish if significant activity
-python -m lsimons_bot.blog
+uv run python -m lsimons_bot.blog
 ```
 
 Blog publishes when: >24 hours since last post AND (>5 commits OR any commit >200 lines changed).
