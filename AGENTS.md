@@ -1,5 +1,7 @@
 # Agent Instructions for lsimons-bot
 
+> This file (`AGENTS.md`) is the canonical agent configuration. `CLAUDE.md` is a symlink to this file.
+
 Python AI bot for Schuberg Philis Slack.
 
 ## Quick Reference
