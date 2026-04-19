@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mise run install)",
+      "Bash(mise run lint)",
+      "Bash(mise run format)",
+      "Bash(mise run typecheck)",
+      "Bash(mise run test)",
+      "Bash(mise run run)",
+      "Bash(mise run ci)",
+      "Bash(mise run install *)",
+      "Bash(mise run lint *)",
+      "Bash(mise run format *)",
+      "Bash(mise run typecheck *)",
+      "Bash(mise run test *)",
+      "Bash(mise run run *)",
+      "Bash(mise run ci *)",
+      "Bash(uv run python -m lsimons_bot.blog --dry-run*)",
+      "Bash(uv run --env-file .env ./app.py)"
+    ]
+  }
+}
