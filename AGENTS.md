@@ -6,11 +6,14 @@ Python AI bot for Schuberg Philis Slack.
 
 ## Quick Reference
 
-- **Setup**: `uv sync --all-groups`
-- **Run**: `slack run`
-- **Format**: `uv run ruff format .`
-- **Lint**: `uv run ruff check . && uv run basedpyright lsimons_bot`
-- **Test**: `uv run pytest`
+- **One-time**: `mise install`
+- **Setup**: `mise run install` (or `uv sync --all-groups`)
+- **Run**: `mise run run` (or `slack run`)
+- **Format**: `mise run format` (or `uv run ruff format .`)
+- **Lint**: `mise run lint` (ruff check + format --check)
+- **Typecheck**: `mise run typecheck` (basedpyright lsimons_bot)
+- **Test**: `mise run test` (or `uv run pytest`)
+- **Full CI gate**: `mise run ci`
 
 ## Structure
 
@@ -72,9 +75,7 @@ Work is NOT complete until `git push` succeeds.
 
 1. **Quality gates** (if code changed):
    ```bash
-   uv run ruff format --check . && uv run ruff check .
-   uv run basedpyright lsimons_bot
-   uv run pytest
+   mise run ci
    ```
 
 2. **Push**:
