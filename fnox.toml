@@ -1,0 +1,20 @@
+# fnox: https://fnox.jdx.dev/
+#
+# Secrets sourced from 1Password (vault: AI). Resolved at runtime by
+# `fnox exec` (wired into the `mise run run` task) so no plaintext
+# secrets land in .env or the shell environment.
+#
+# Non-secret config (LITELLM_API_BASE, ASSISTANT_MODEL, SLACK_BOT_TOKEN,
+# SLACK_APP_TOKEN, LITELLM_API_KEY, WORDPRESS_USERNAME,
+# WORDPRESS_CLIENT_ID, WORDPRESS_SITE_ID, LLM_BASE_URL, LLM_DEFAULT_MODEL)
+# stays in .env — see .env.example.
+
+[providers.op]
+type = "1password"
+vault = "AI"
+
+[secrets]
+LLM_AUTH_TOKEN = { provider = "op", value = "op://AI/LLM_AUTH_TOKEN/password" }
+WORDPRESS_CLIENT_SECRET = { provider = "op", value = "op://AI/WORDPRESS_CLIENT_SECRET/password" }
+WORDPRESS_APPLICATION_PASSWORD = { provider = "op", value = "op://AI/WORDPRESS_APPLICATION_PASSWORD/password" }
+GITHUB_WORDPRESS_TOKEN = { provider = "op", value = "op://AI/GITHUB_TOKEN/password" }

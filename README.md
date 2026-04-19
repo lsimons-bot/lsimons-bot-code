@@ -32,37 +32,47 @@ lsimons_bot/
 
 ### Dependencies
 
+* [mise](https://mise.jdx.dev/) (installs everything else, including `fnox`)
 * [slack cli](https://slack.dev/cli/)
-* [uv](https://pypi.org/project/uv/)
-* [basedpyright](https://pypi.org/project/basedpyright/)
+* [1Password CLI (`op`)](https://developer.1password.com/docs/cli/) signed in
 
 ```bash
-uv python install
-uv venv
-source .venv/bin/activate
-uv sync --all-groups
+mise install
+mise run install
 ```
 
-### Environment Variables
+### Configuration
+
+Non-secret config and any secrets not yet in 1Password live in `.env`:
 
 ```bash
 cp .env.example .env
-# Edit .env with your credentials
+# Edit .env with your Slack/LiteLLM credentials and blog config
 ```
 
-**Slack Assistant** requires:
+Secrets stored in 1Password are resolved at runtime by [`fnox`](https://fnox.jdx.dev/)
+— see [`fnox.toml`](./fnox.toml). The `mise run run` and `mise run blog` tasks
+invoke commands through `fnox exec`, which reads secret references from
+`fnox.toml` and injects the resolved values as environment variables.
+
+Secrets currently sourced from 1Password (vault `AI`):
+- `LLM_AUTH_TOKEN` - LiteLLM key for the blog LLM client
+- `WORDPRESS_CLIENT_SECRET` - WordPress.com OAuth client secret
+- `WORDPRESS_APPLICATION_PASSWORD` - WordPress.com application password
+- `GITHUB_WORDPRESS_TOKEN` - GitHub personal access token (for blog activity)
+
+**Slack Assistant** additionally requires (via `.env`):
 - `SLACK_BOT_TOKEN` - Bot OAuth token
 - `SLACK_APP_TOKEN` - App-level token for socket mode
 - `LITELLM_API_BASE` - LiteLLM proxy URL
 - `LITELLM_API_KEY` - LiteLLM API key
 - `ASSISTANT_MODEL` - Model name (e.g., `gpt-4`)
 
-**Blog Module** requires:
-- `WORDPRESS_USERNAME`, `WORDPRESS_APPLICATION_PASSWORD` - WordPress.com credentials
-- `WORDPRESS_CLIENT_ID`, `WORDPRESS_CLIENT_SECRET` - OAuth app credentials
+**Blog Module** additionally requires (via `.env`):
+- `WORDPRESS_USERNAME` - WordPress.com username
+- `WORDPRESS_CLIENT_ID` - WordPress.com OAuth client ID
 - `WORDPRESS_SITE_ID` - Target site ID
-- `GITHUB_TOKEN` - GitHub personal access token
-- LLM configuration via [lsimons-llm](https://github.com/lsimons-bot/lsimons-llm) environment variables
+- `LLM_BASE_URL`, `LLM_DEFAULT_MODEL` - Blog LLM config
 
 ### Slack App Configuration
 
@@ -78,17 +88,18 @@ The `manifest.json` contains initial config; ongoing changes via web settings.
 ### Running the Slack Bot
 
 ```bash
-uv run --env-file .env ./app.py
+mise run run
+# or directly: fnox exec -- slack run
 ```
 
 ### Running the Blog Publisher
 
 ```bash
-# Dry run (no publishing)
-uv run python -m lsimons_bot.blog --dry-run --verbose
+# Full publish with 1Password-backed secrets
+mise run blog
 
-# Publish if significant activity
-uv run python -m lsimons_bot.blog
+# Dry run (no publishing) — pass args through fnox exec
+fnox exec -- uv run python -m lsimons_bot.blog --dry-run --verbose
 ```
 
 Blog publishes when: >24 hours since last post AND (>5 commits OR any commit >200 lines changed).

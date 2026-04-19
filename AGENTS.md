@@ -6,14 +6,19 @@ Python AI bot for Schuberg Philis Slack.
 
 ## Quick Reference
 
-- **One-time**: `mise install`
+- **One-time**: `mise install` (also installs `fnox`)
 - **Setup**: `mise run install` (or `uv sync --all-groups`)
-- **Run**: `mise run run` (or `slack run`)
+- **Run**: `mise run run` (wraps `slack run` in `fnox exec`)
+- **Blog publisher**: `mise run blog` (wraps `python -m lsimons_bot.blog` in `fnox exec`)
 - **Format**: `mise run format` (or `uv run ruff format .`)
 - **Lint**: `mise run lint` (ruff check + format --check)
 - **Typecheck**: `mise run typecheck` (basedpyright lsimons_bot)
 - **Test**: `mise run test` (or `uv run pytest`)
 - **Full CI gate**: `mise run ci`
+
+Secrets from 1Password (vault `AI`) are declared in `fnox.toml` and
+injected at runtime by `fnox exec`. Non-secret config (and any secrets
+not yet in 1Password) live in `.env`.
 
 ## Structure
 

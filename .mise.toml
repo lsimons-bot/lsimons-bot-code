@@ -4,8 +4,12 @@
 [tools]
 python = "3.14"
 uv = "latest"
+"cargo:fnox" = "latest"
 
 [env]
+# Non-secret config (and any secrets not yet migrated to 1Password) live in
+# .env. Secrets from 1Password are injected by `fnox exec` in the tasks that
+# need them — see fnox.toml.
 _.file = { path = ".env", optional = true }
 
 [tasks.install]
@@ -29,8 +33,12 @@ description = "pytest"
 run = "uv run pytest"
 
 [tasks.run]
-description = "Run the bot (slack run)"
-run = "slack run"
+description = "Run the bot (slack run) with secrets from fnox"
+run = "fnox exec -- slack run"
+
+[tasks.blog]
+description = "Run the blog publisher with secrets from fnox"
+run = "fnox exec -- uv run python -m lsimons_bot.blog"
 
 [tasks.ci]
 description = "Full CI gate"
