@@ -51,4 +51,5 @@ interaction.
 
 - `op` signed in (session or biometric unlock) so the 1Password provider
   can fetch references
-- `mise install` installs `fnox` via `cargo:fnox`
+- `mise install` installs `fnox` from its mise registry entry
+  (prebuilt GitHub release binary — no cargo compile)

@@ -4,7 +4,7 @@
 [tools]
 python = "3.14"
 uv = "latest"
-"cargo:fnox" = "latest"
+fnox = "latest"
 
 [env]
 # Non-secret config (and any secrets not yet migrated to 1Password) live in
